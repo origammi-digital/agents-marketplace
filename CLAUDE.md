@@ -90,6 +90,26 @@ Both agents gate before every merge — run them in parallel.
 
 ---
 
+## Checking and updating versions
+
+When the user asks "are my agents up to date?" or "what version am I on?":
+
+```bash
+agents list           # shows ✓ (up to date), ↑ (update available), ○ (not installed)
+agents list --updates # shows only agents with available updates
+agents info <name>    # shows installed version, catalog version, and installedAt timestamp
+```
+
+To update:
+```bash
+agents install --update       # update only agents with a newer version
+agents install --force --all  # force reinstall everything
+```
+
+Each skill has a `version` field in `catalog.json`. When a skill file is changed, the version must be bumped or `agents list` won't show the update as available.
+
+---
+
 ## Adding a new agent
 
 If the user wants to create a new agent:
@@ -108,3 +128,13 @@ If the user wants to create a new agent:
 The agent content should be written as a role prompt — what the agent IS, what it does, what it won't do. Context about the specific project goes in the project's own CLAUDE.md/AGENTS.md, not here.
 
 Agents in this marketplace are **generic** — no product-specific context, no hardcoded paths or stack assumptions. Product-specific context belongs in the project's CLAUDE.md.
+
+### Updating an existing agent
+
+When editing an existing skill file:
+1. Make the changes to `plugins/<plugin>/<name>.md`
+2. **Bump the `version` in `skills/catalog.json`** for that skill — otherwise users won't know an update is available
+3. Use semver: patch (`1.0.0 → 1.0.1`) for fixes/additions, minor (`1.0.0 → 1.1.0`) for new sections, major (`1.0.0 → 2.0.0`) for rewrites
+4. Commit and push
+
+If the version is not bumped, `agents list` will continue to show `✓` for users who already have the old version installed — they won't know to update.

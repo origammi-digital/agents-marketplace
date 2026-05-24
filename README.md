@@ -40,15 +40,29 @@ The AI reads `CLAUDE.md` / `AGENTS.md`, lists available plugins, asks your platf
 ## Manual CLI reference
 
 ```bash
-agents list                                           # list all agents
-agents install dev-team                               # Claude Code
-agents install dev-team references                    # with reference skills
-agents install --all                                  # everything
+agents list                                           # list all agents with installed versions
+agents list --updates                                 # show only agents with updates available
+agents install dev-team                               # install plugin (Claude Code)
+agents install dev-team references                    # install with reference skills
+agents install --all                                  # install everything
+agents install --update                               # update only agents with a newer version
+agents install --force --all                          # force reinstall everything
+agents info architect                                 # show version, installedAt, description
 agents export dev-team --platform cursor              # Cursor (.cursor/rules/)
 agents export dev-team --platform codex               # Codex (AGENTS.md)
 agents export dev-team --platform gemini              # Gemini (GEMINI.md)
 agents export --all --platform gemini --output ~/.gemini  # Gemini global
 ```
+
+### Version status in `agents list`
+
+```
+✓ architect          2.0.0   up to date
+↑ devops             1.0→2.0 update available — run: agents install --update
+○ llm-eval           1.0.0   not installed
+```
+
+Each agent has a `version` field in `catalog.json`. When a skill is updated, its version is bumped and `agents list` shows `↑`. Run `agents install --update` to apply only the changes.
 
 ---
 
