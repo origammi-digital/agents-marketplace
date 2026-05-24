@@ -1,96 +1,127 @@
 {
-  "version": "1",
-  "skills": [
+  "version": "2",
+  "plugins": [
     {
-      "name": "red-team",
-      "category": "universal",
-      "description": "Adversary simulation, kill chain analysis, exploitation path modeling. Gate before every merge.",
-      "file": "universal/red-team.md",
-      "tags": ["security", "review"]
+      "name": "dev-team",
+      "description": "Generic development team: backend engineer, frontend engineer, and QA/tester.",
+      "skills": [
+        {
+          "skill": "backend",
+          "installAs": "dev-team-backend",
+          "description": "Senior backend engineer — layered architecture, TDD-first, security-aware. Laravel/PHP primary.",
+          "file": "plugins/dev-team/backend.md",
+          "tags": ["backend", "laravel", "php"]
+        },
+        {
+          "skill": "frontend",
+          "installAs": "dev-team-frontend",
+          "description": "Senior frontend engineer — React 19, TypeScript, Tailwind, Inertia.js.",
+          "file": "plugins/dev-team/frontend.md",
+          "tags": ["frontend", "react", "typescript"]
+        },
+        {
+          "skill": "tester",
+          "installAs": "dev-team-tester",
+          "description": "QA engineer / TDD lead — test case definition, coverage review, framework-agnostic.",
+          "file": "plugins/dev-team/tester.md",
+          "tags": ["testing", "tdd", "qa"]
+        }
+      ]
     },
     {
-      "name": "blue-team",
-      "category": "universal",
-      "description": "Detection engineering, audit trail completeness, IR readiness, hardening. Gate before every merge.",
-      "file": "universal/blue-team.md",
-      "tags": ["security", "review"]
+      "name": "security",
+      "description": "Security review team: offensive (red-team) and defensive (blue-team) gates.",
+      "skills": [
+        {
+          "skill": "red-team",
+          "installAs": "red-team",
+          "description": "Adversary simulation, kill chain analysis, exploitation path modeling. Gate before every merge.",
+          "file": "plugins/security/red-team.md",
+          "tags": ["security", "offensive", "review"]
+        },
+        {
+          "skill": "blue-team",
+          "installAs": "blue-team",
+          "description": "Detection engineering, audit trail completeness, IR readiness, hardening. Gate before every merge.",
+          "file": "plugins/security/blue-team.md",
+          "tags": ["security", "defensive", "review"]
+        }
+      ]
     },
     {
-      "name": "architect",
-      "category": "universal",
-      "description": "Code quality, design decisions, performance, scalability review.",
-      "file": "universal/architect.md",
-      "tags": ["review", "architecture"]
+      "name": "engineering",
+      "description": "Cross-cutting engineering roles: architect, git/CI standards, DevOps.",
+      "skills": [
+        {
+          "skill": "architect",
+          "installAs": "architect",
+          "description": "Code quality, design decisions, performance, scalability review.",
+          "file": "plugins/engineering/architect.md",
+          "tags": ["architecture", "review"]
+        },
+        {
+          "skill": "devops",
+          "installAs": "devops",
+          "description": "CI/CD, IaC, GitOps, cost optimization, infra incidents.",
+          "file": "plugins/engineering/devops.md",
+          "tags": ["infra", "devops", "ci"]
+        },
+        {
+          "skill": "commit-and-pr-standards",
+          "installAs": "commit-and-pr-standards",
+          "description": "Git discipline, CI hygiene, commit and PR message standards.",
+          "file": "plugins/engineering/commit-and-pr-standards.md",
+          "tags": ["git", "ci"]
+        }
+      ]
     },
     {
-      "name": "tdd-lead",
-      "category": "universal",
-      "description": "Test-first discipline, coverage review, test case definition.",
-      "file": "universal/tdd-lead.md",
-      "tags": ["testing"]
-    },
-    {
-      "name": "commit-and-pr-standards",
-      "category": "universal",
-      "description": "Git discipline, CI hygiene, commit and PR message standards.",
-      "file": "universal/commit-and-pr-standards.md",
-      "tags": ["git", "ci"]
-    },
-    {
-      "name": "devops",
-      "category": "universal",
-      "description": "CI/CD, IaC, GitOps, cost optimization, infra incidents.",
-      "file": "universal/devops.md",
-      "tags": ["infra", "devops"]
-    },
-    {
-      "name": "aposent-manager",
-      "category": "aposent",
-      "description": "Squad orchestrator for aposent.ai — coordinates full team from PM to security gates.",
-      "file": "aposent/aposent-manager.md",
-      "tags": ["manager", "orchestrator"]
-    },
-    {
-      "name": "aposent-design",
-      "category": "aposent",
-      "description": "Senior UI/UX designer for aposent.ai — prazo-first design system, Inertia + Radix UI + Tailwind.",
-      "file": "aposent/aposent-design.md",
-      "tags": ["design", "frontend"]
-    },
-    {
-      "name": "aposent-backend",
-      "category": "aposent",
-      "description": "Laravel/PHP implementation specialist for aposent.ai.",
-      "file": "aposent/aposent-backend.md",
-      "tags": ["backend", "laravel"]
-    },
-    {
-      "name": "aposent-pm",
-      "category": "aposent",
-      "description": "Product discovery and prioritization for the aposent.ai platform.",
-      "file": "aposent/aposent-pm.md",
-      "tags": ["product"]
-    },
-    {
-      "name": "aposent-qa",
-      "category": "aposent",
-      "description": "Browser-based E2E validation via Playwright on Laravel + Inertia.js stack.",
-      "file": "aposent/aposent-qa.md",
-      "tags": ["qa", "testing"]
-    },
-    {
-      "name": "aposent-legal",
-      "category": "aposent",
-      "description": "Direito Previdenciário + LGPD + sigilo OAB compliance gate.",
-      "file": "aposent/aposent-legal.md",
-      "tags": ["legal", "compliance"]
-    },
-    {
-      "name": "lumora-manager",
-      "category": "lumora",
-      "description": "Squad orchestrator for lumora.",
-      "file": "lumora/lumora-manager.md",
-      "tags": ["manager", "orchestrator"]
+      "name": "aposent",
+      "description": "Full squad for aposent.ai — previdenciário SaaS (Laravel + Inertia + React).",
+      "skills": [
+        {
+          "skill": "manager",
+          "installAs": "aposent-manager",
+          "description": "Squad orchestrator — coordinates PM, design, backend, QA, security, legal gates.",
+          "file": "plugins/aposent/manager.md",
+          "tags": ["manager", "orchestrator"]
+        },
+        {
+          "skill": "design",
+          "installAs": "aposent-design",
+          "description": "Senior UI/UX designer — prazo-first design system, Inertia + Radix UI + Tailwind.",
+          "file": "plugins/aposent/design.md",
+          "tags": ["design", "frontend", "ux"]
+        },
+        {
+          "skill": "backend",
+          "installAs": "aposent-backend",
+          "description": "Laravel/PHP implementation specialist for aposent.ai.",
+          "file": "plugins/aposent/backend.md",
+          "tags": ["backend", "laravel"]
+        },
+        {
+          "skill": "pm",
+          "installAs": "aposent-pm",
+          "description": "Product discovery and prioritization for the aposent.ai platform.",
+          "file": "plugins/aposent/pm.md",
+          "tags": ["product"]
+        },
+        {
+          "skill": "qa",
+          "installAs": "aposent-qa",
+          "description": "Browser-based E2E validation via Playwright on Laravel + Inertia.js stack.",
+          "file": "plugins/aposent/qa.md",
+          "tags": ["qa", "playwright"]
+        },
+        {
+          "skill": "legal",
+          "installAs": "aposent-legal",
+          "description": "Direito Previdenciário + LGPD + sigilo OAB compliance gate.",
+          "file": "plugins/aposent/legal.md",
+          "tags": ["legal", "lgpd", "compliance"]
+        }
+      ]
     }
   ]
 }

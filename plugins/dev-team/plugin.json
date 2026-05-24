@@ -1,0 +1,5 @@
+{
+  "name": "dev-team",
+  "description": "Generic development team: backend engineer, frontend engineer, and QA/tester. Stack-aware but project-agnostic.",
+  "skills": ["backend", "frontend", "tester"]
+}
