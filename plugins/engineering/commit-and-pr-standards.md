@@ -1,66 +1,180 @@
 ---
 name: commit-and-pr-standards
-description: Standards for small commits, PRs from main/master with pull-before-branch, minimal comments (English only for comments, commits, and PRs). Use when creating commits, opening branches, writing PRs, or asking about git workflow.
+description: Git discipline: Conventional Commits format, small focused commits, branch from up-to-date main, verify PR status before push, open PR automatically, English only for commits/PRs/comments, build + tests must pass before commit. Activate when creating commits, opening branches, writing PRs, or asking about git workflow.
 ---
 
 # Commit and PR Standards
 
-Apply these rules when creating commits, opening branches, or writing PRs and code comments.
+Apply these rules when creating commits, opening branches, writing PRs, and code comments.
 
-## 1. Before Committing: Run Build and Tests — MANDATORY, NO EXCEPTIONS
+---
 
-> **STOP. Do not `git commit` until you have run the build AND the tests and both pass.**
+## 1. Before Committing: Build + Tests — MANDATORY
 
-- **Run the build first**: `npm run build` / `pnpm build` / `go build ./...` (or whatever the project uses). A passing test suite does NOT mean the build passes — TypeScript errors, missing imports, and lint failures only surface at build time.
-- **Then run the tests**: `npm test` / `pnpm test` / `go test ./...`.
-- **Both must pass.** If either fails: fix the failure, then re-run both before committing.
-- **Never commit a broken build**, even if it "looks like a minor issue" or "CI might catch it". Broken builds block the whole team.
-- To find the right commands, check `package.json` (`scripts` section), `Makefile`, or the existing CI workflow files (`.github/workflows/`).
+> **STOP. Do not `git commit` until both the build AND tests pass.**
 
-## 2. Commits: Keep Them Small
+- **Run the build**: `npm run build` / `pnpm build` / `go build ./...` / `php artisan` / equivalent. A passing test suite does not mean the build passes — TypeScript errors, missing imports, and compile failures only surface at build time.
+- **Run the tests**: `npm test` / `go test ./...` / `php artisan test` / equivalent.
+- **Both must pass.** Fix failures before committing. Never commit a broken build — it blocks the whole team.
+- To find the right commands: check `package.json` scripts, `Makefile`, or existing CI workflow files (`.github/workflows/`).
+
+---
+
+## 2. Conventional Commits Format
+
+Every commit message must follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <short description>
+
+[optional body]
+
+[optional footer]
+```
+
+**Types:**
+
+| Type | When to use |
+|------|------------|
+| `feat` | New feature or capability |
+| `fix` | Bug fix |
+| `chore` | Maintenance, dependency update, config change (no production logic change) |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `test` | Adding or updating tests |
+| `docs` | Documentation only |
+| `perf` | Performance improvement |
+| `ci` | CI/CD pipeline changes |
+| `build` | Build system or tooling changes |
+| `revert` | Reverts a previous commit |
+
+**Rules:**
+- Short description in lowercase, imperative mood, no period at end
+- Scope is optional but helpful: `fix(auth): reject expired tokens` not `fix: auth tokens`
+- Breaking changes: append `!` after type/scope — `feat(api)!: rename /users to /accounts`
+- Body: wrap at 72 chars, explain WHY (not what — the diff shows that)
+
+**Examples:**
+```
+feat(billing): add Stripe webhook for payment confirmation
+fix(auth): reject tokens signed with alg:none
+chore(deps): upgrade Laravel to 11.x
+refactor(transfer): extract balance check into domain service
+test(api): add coverage for concurrent transfer edge case
+perf(dashboard): replace N+1 client query with eager load
+ci: cache composer dependencies between workflow runs
+```
+
+---
+
+## 3. Keep Commits Small
 
 - **One logical change per commit.** Prefer several small commits over one large commit.
-- Each commit should be self-contained and easy to describe in one line.
-- If a change does multiple things (e.g., refactor + new feature), split into separate commits when reasonable.
+- Each commit should be self-contained: if reverted, it undoes exactly one logical change.
+- If a change does multiple things (refactor + new feature), split into separate commits.
 - Small commits make review, bisect, and revert easier.
 
-## 3. After Committing: Push When Done
+---
 
-- **When all commits for the task are finished**, run `git push` (or `git push origin <branch>`) to publish the branch to the remote.
-- Do not leave the user to push manually; include push as part of the commit workflow when the agent has completed the commits.
+## 4. After Committing: Push When Done
 
-## 4. Branching and Pull Requests
+When all commits for the task are finished, push:
+```bash
+git push origin <branch>
+```
 
-- **New branches and PRs must be based on `main` or `master`** (whatever is the default branch).
-- **Before creating a new branch:** always update the base branch first:
-  1. `git checkout main` (or `master`)
-  2. `git pull origin main` (or `master`)
-  3. Then create the new branch: `git checkout -b feature/your-branch-name`
-- Never open a PR from a branch that was created from an outdated or unrelated branch. This keeps history clean and reduces merge conflicts.
-- **Before pushing to an existing branch — STOP and check the PR status first:**
+Do not leave the user to push manually. Include push as part of the workflow when commits are complete.
 
-  > **STOP. Do not `git push` to an existing branch until you have verified the PR is still open.**
+---
 
-  Run: `gh pr list --head <current-branch>`
-  - If the PR is **open**: push normally.
-  - If the PR is **merged or closed**: do NOT push to this branch. Create a new branch from up-to-date main and open a new PR for the new changes. Pushing to a merged branch orphans commits and confuses history.
+## 5. Branching Strategy
 
-- **After pushing a branch:** always open the PR automatically (e.g. `gh pr create` with title/body from the commits or a short summary). Do not leave the user to open the PR manually.
+New branches must be based on `main` (or `master`, whichever is the default):
 
-## 5. Comments: Minimal and Meaningful
+```bash
+git checkout main
+git pull origin main
+git checkout -b <type>/<short-description>
+```
 
-- **Prefer no comments** when the code is clear by itself.
-- **Add comments only when necessary** to explain:
-  - Non-obvious architectural or design decisions
+Branch naming convention:
+- `feat/<short-description>` — new feature
+- `fix/<short-description>` — bug fix
+- `chore/<short-description>` — maintenance
+- `refactor/<short-description>` — refactor
+- `test/<short-description>` — test additions
+
+Never open a PR from a branch based on an outdated or unrelated branch.
+
+---
+
+## 6. Before Pushing to an Existing Branch — STOP
+
+> **STOP. Verify the PR is still open before pushing.**
+
+```bash
+gh pr list --head <current-branch> --state all
+```
+
+- PR **open**: push normally.
+- PR **merged or closed**: do NOT push. Create a new branch from up-to-date main and open a new PR for the new changes.
+
+Pushing to a merged branch orphans commits and creates confusion in history.
+
+---
+
+## 7. Opening Pull Requests
+
+After pushing, open the PR automatically (`gh pr create`). Do not leave the user to open it manually.
+
+**PR title:** follow Conventional Commits format:
+```
+feat(billing): add Stripe webhook for payment confirmation
+```
+
+**PR body template:**
+```markdown
+## What
+<1-3 bullet points describing the change>
+
+## Why
+<The problem this solves, or the requirement driving this>
+
+## How to test
+- [ ] <step to verify the happy path>
+- [ ] <step to verify the main error path>
+- [ ] <any special setup required>
+```
+
+---
+
+## 8. Comments: Minimal and Meaningful
+
+- **Prefer no comments** when the code is clear.
+- **Add comments only for:**
+  - Non-obvious architectural decisions
   - Complex business rules or algorithms
-  - Workarounds or non-obvious constraints (with a brief reason)
-- Avoid redundant comments that restate what the code does.
-- When you do comment, keep it concise and in **English**.
+  - Workarounds with a brief reason ("avoids Laravel queue bug in PHP 8.3 < 8.3.2")
+- Never comment what the code does — the code does that. Comment why when non-obvious.
+- Keep comments concise and in **English**.
 
-## 6. Language: English Only
+---
 
-- **Commits:** Write commit messages in **English** (e.g., "Add password change to admin profile", "Fix validation for strong password").
-- **Pull requests:** Title and description in **English**.
-- **Code comments:** Always in **English** when comments are needed.
+## 9. Language: English Only
 
-Summarize for the agent: **NEVER commit without first running the build AND the tests — both must pass, no exceptions**; small commits; **when all commits are done, run `git push`** so the branch is published; branch from up-to-date main/master; **STOP before pushing to an existing branch — run `gh pr list --head <branch>` first; if the PR is merged or closed, create a new branch from main and open a new PR instead of pushing to the old branch**; **open the PR automatically after push** (e.g. `gh pr create`); minimal comments (only for complex/architectural reasons); use English for commits, PRs, and comments.
+- **Commits:** English, always. (`feat(auth): reject expired sessions`)
+- **Pull request** title and description: English.
+- **Code comments:** English when comments are needed.
+- UI labels, user-facing strings, and URL slugs: match the product's language (e.g., Portuguese for a Brazilian product).
+
+---
+
+## Summary (for quick reference)
+
+1. Build + tests pass → commit
+2. Conventional Commits format: `type(scope): description`
+3. One logical change per commit
+4. Push when all commits are done
+5. Branch from up-to-date main: `git pull origin main` first
+6. Verify PR status before pushing to existing branch: `gh pr list --head <branch>`
+7. Open PR automatically after push: `gh pr create`
+8. Minimal comments, English only

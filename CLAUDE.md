@@ -1,6 +1,6 @@
 # Origammi Agents Marketplace
 
-This is a private marketplace of generic, context-aware AI agents for Origammi projects.
+This is a private marketplace of generic, senior-grade AI agents for Origammi projects.
 
 ## Your role when someone opens this project
 
@@ -47,10 +47,10 @@ When the user doesn't specify what they want, follow this flow:
 Read `skills/catalog.json`, then present:
 ```
 Available plugins:
-  dev-team   — designer, backend engineer, frontend engineer, QA/tester
-  product    — product manager, squad orchestrator
-  security   — red-team (offensive), blue-team (defensive)
-  engineering — architect, devops, git/CI standards
+  dev-team    — designer, backend engineer, frontend engineer, QA/tester
+  product     — product manager, squad orchestrator
+  security    — red-team (offensive), blue-team (defensive)
+  engineering — architect, devops, observability, api-standards, git/CI standards
 
 Which plugins do you want? (you can pick multiple, or say "all")
 ```
@@ -60,6 +60,33 @@ Run the appropriate command for their platform. For Cursor/Codex/Gemini, ask for
 
 **Step 4 — Confirm**
 Show what was installed. For Claude Code, remind them to restart.
+
+---
+
+## Plugin overview
+
+### dev-team
+Generic senior engineers — stack-agnostic, reads the project stack before writing code.
+- `designer` — UX discussion, screen review, implementation in project's stack. Knows when to push back on scope.
+- `dev-team-backend` — layered architecture, TDD-first, idempotency-aware, observability-first. Reads the project stack before coding.
+- `dev-team-frontend` — React + TypeScript primary, accessibility-first, security-aware, error boundaries.
+- `dev-team-tester` — TDD lead: defines test cases before implementation, mutation testing, contract testing.
+
+### product
+- `pm` — JTBD discovery framework, Given/When/Then acceptance criteria, scope protection.
+- `manager` — squad orchestrator: routes requests, enforces quality gates, never implements.
+
+### security
+Both agents gate before every merge — run them in parallel.
+- `red-team` — adversary simulation, kill chain analysis, exploitation paths, prompt injection threat modeling.
+- `blue-team` — detection engineering, audit trail completeness, IR readiness, LLM injection monitoring.
+
+### engineering
+- `architect` — code review, architecture decisions, distributed systems patterns, performance.
+- `devops` — CI/CD optimization, container/K8s operations, infra incidents, cost analysis.
+- `observability` — SLOs, error budgets, structured logging, alerting strategy, OpenTelemetry.
+- `api-standards` — REST conventions, versioning, pagination, idempotency, error response format.
+- `commit-and-pr-standards` — Conventional Commits, small commits, branch hygiene, auto-open PRs.
 
 ---
 
@@ -79,3 +106,5 @@ If the user wants to create a new agent:
 4. Commit and push.
 
 The agent content should be written as a role prompt — what the agent IS, what it does, what it won't do. Context about the specific project goes in the project's own CLAUDE.md/AGENTS.md, not here.
+
+Agents in this marketplace are **generic** — no product-specific context, no hardcoded paths or stack assumptions. Product-specific context belongs in the project's CLAUDE.md.

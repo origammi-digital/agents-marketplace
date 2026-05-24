@@ -1,35 +1,35 @@
 {
-  "version": "3",
+  "version": "4",
   "plugins": [
     {
       "name": "dev-team",
-      "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Context-aware, not product-specific.",
+      "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Stack-agnostic, senior-grade.",
       "skills": [
         {
           "skill": "designer",
           "installAs": "designer",
-          "description": "Senior product designer — reads existing design system and user context before proposing. Implements in the project's stack.",
+          "description": "Senior product designer — context-first, reads design system before proposing, implements in project stack, knows when to push back on scope.",
           "file": "plugins/dev-team/designer.md",
           "tags": ["design", "ux", "frontend"]
         },
         {
           "skill": "backend",
           "installAs": "dev-team-backend",
-          "description": "Senior backend engineer — layered architecture, TDD-first, security-aware. Laravel/PHP primary.",
+          "description": "Senior backend engineer — stack-agnostic, layered architecture, TDD-first, idempotency-aware, observability-first.",
           "file": "plugins/dev-team/backend.md",
-          "tags": ["backend", "laravel", "php"]
+          "tags": ["backend", "api", "database"]
         },
         {
           "skill": "frontend",
           "installAs": "dev-team-frontend",
-          "description": "Senior frontend engineer — React 19, TypeScript, Tailwind, Inertia.js.",
+          "description": "Senior frontend engineer — stack-agnostic, React + TypeScript primary, accessibility-first, security-aware, error boundaries.",
           "file": "plugins/dev-team/frontend.md",
           "tags": ["frontend", "react", "typescript"]
         },
         {
           "skill": "tester",
           "installAs": "dev-team-tester",
-          "description": "QA engineer / TDD lead — test case definition, coverage review, framework-agnostic.",
+          "description": "QA engineer / TDD lead — test case definition, coverage review, mutation testing, contract testing, performance testing.",
           "file": "plugins/dev-team/tester.md",
           "tags": ["testing", "tdd", "qa"]
         }
@@ -42,7 +42,7 @@
         {
           "skill": "pm",
           "installAs": "pm",
-          "description": "Senior product manager — translates user problems into scoped, prioritized work. Reads project context before opining.",
+          "description": "Senior product manager — JTBD discovery framework, Given/When/Then acceptance criteria, scope protection, friction analysis.",
           "file": "plugins/product/pm.md",
           "tags": ["product", "discovery", "prioritization"]
         },
@@ -57,19 +57,19 @@
     },
     {
       "name": "security",
-      "description": "Security review team: offensive (red-team) and defensive (blue-team) gates.",
+      "description": "Security review team: offensive (red-team) and defensive (blue-team) gates. Includes prompt injection coverage.",
       "skills": [
         {
           "skill": "red-team",
           "installAs": "red-team",
-          "description": "Adversary simulation, kill chain analysis, exploitation path modeling. Gate before every merge.",
+          "description": "Adversary simulation, kill chain analysis, exploitation path modeling, prompt injection threat modeling. Gate before every merge.",
           "file": "plugins/security/red-team.md",
           "tags": ["security", "offensive", "review"]
         },
         {
           "skill": "blue-team",
           "installAs": "blue-team",
-          "description": "Detection engineering, audit trail completeness, IR readiness, hardening. Gate before every merge.",
+          "description": "Detection engineering, audit trail completeness, IR readiness, hardening, LLM injection monitoring. Gate before every merge.",
           "file": "plugins/security/blue-team.md",
           "tags": ["security", "defensive", "review"]
         }
@@ -77,26 +77,40 @@
     },
     {
       "name": "engineering",
-      "description": "Cross-cutting engineering roles: architect, DevOps, and git/CI standards.",
+      "description": "Cross-cutting engineering: architect, DevOps, observability, API standards, and git/CI standards.",
       "skills": [
         {
           "skill": "architect",
           "installAs": "architect",
-          "description": "Software architect — code quality, design decisions, performance, scalability review.",
+          "description": "Software architect — code quality, design decisions, performance, scalability, distributed systems review.",
           "file": "plugins/engineering/architect.md",
           "tags": ["architecture", "review"]
         },
         {
           "skill": "devops",
           "installAs": "devops",
-          "description": "DevOps/SRE — CI/CD, IaC, GitOps, cost optimization, infra incidents.",
+          "description": "DevOps/Platform engineer — container-first, GitOps-native, CI/CD optimization, cost analysis, infra incident response.",
           "file": "plugins/engineering/devops.md",
           "tags": ["infra", "devops", "ci"]
         },
         {
+          "skill": "observability",
+          "installAs": "observability",
+          "description": "Observability engineer — SLOs, error budgets, Four Golden Signals, structured logging, alerting strategy, OpenTelemetry.",
+          "file": "plugins/engineering/observability.md",
+          "tags": ["observability", "monitoring", "slo"]
+        },
+        {
+          "skill": "api-standards",
+          "installAs": "api-standards",
+          "description": "API design standards — REST conventions, versioning, pagination, idempotency, error response format.",
+          "file": "plugins/engineering/api-standards.md",
+          "tags": ["api", "rest", "standards"]
+        },
+        {
           "skill": "commit-and-pr-standards",
           "installAs": "commit-and-pr-standards",
-          "description": "Git discipline, CI hygiene, commit and PR message standards.",
+          "description": "Git discipline — Conventional Commits format, small focused commits, branch from main, CI hygiene.",
           "file": "plugins/engineering/commit-and-pr-standards.md",
           "tags": ["git", "ci"]
         }
