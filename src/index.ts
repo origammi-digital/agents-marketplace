@@ -22,6 +22,7 @@ interface SkillEntry {
   file: string;
   tags: string[];
   version: string;
+  dependencies?: string[];
 }
 
 interface Plugin {
@@ -111,6 +112,29 @@ function resolveTargets(catalog: Catalog, targets: string[], all: boolean): Skil
     process.exit(1);
   }
   return out;
+}
+
+function resolveDependencies(catalog: Catalog, skills: SkillEntry[]): SkillEntry[] {
+  const seen = new Set(skills.map(s => s.installAs));
+  const result = [...skills];
+  const queue = [...skills];
+
+  while (queue.length > 0) {
+    const skill = queue.shift()!;
+    for (const dep of skill.dependencies ?? []) {
+      if (seen.has(dep)) continue;
+      const found = findSkillByInstallAs(catalog, dep);
+      if (!found) {
+        console.error(`  ✗ Dependency "${dep}" required by "${skill.installAs}" not found in catalog`);
+        process.exit(1);
+      }
+      seen.add(dep);
+      result.push(found.entry);
+      queue.push(found.entry);
+    }
+  }
+
+  return result;
 }
 
 // ── Claude Code adapter ───────────────────────────────────────────────────
@@ -273,7 +297,10 @@ program
       console.error('Specify a plugin name, agent name, or --all');
       process.exit(1);
     }
-    let toInstall = resolveTargets(catalog, targets, opts.all ?? false);
+    let toInstall = resolveDependencies(
+      catalog,
+      resolveTargets(catalog, targets, opts.all ?? false),
+    );
 
     if (opts.update && !opts.force) {
       // In update mode without force: only install if not installed or version differs

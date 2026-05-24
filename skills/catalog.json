@@ -19,7 +19,8 @@
           "version": "2.0.0",
           "description": "Senior backend engineer — stack-agnostic, layered architecture, TDD-first, idempotency-aware, observability-first.",
           "file": "plugins/dev-team/backend.md",
-          "tags": ["backend", "api", "database"]
+          "tags": ["backend", "api", "database"],
+          "dependencies": ["api-standards", "ref-performance-patterns"]
         },
         {
           "skill": "frontend",
@@ -35,7 +36,8 @@
           "version": "2.0.0",
           "description": "QA engineer / TDD lead — test case definition, coverage review, mutation testing, contract testing, performance testing.",
           "file": "plugins/dev-team/tester.md",
-          "tags": ["testing", "tdd", "qa"]
+          "tags": ["testing", "tdd", "qa"],
+          "dependencies": ["ref-testing-frameworks"]
         }
       ]
     },
@@ -93,7 +95,8 @@
           "version": "2.0.0",
           "description": "Software architect — code quality, design decisions, performance, scalability, distributed systems review.",
           "file": "plugins/engineering/architect.md",
-          "tags": ["architecture", "review"]
+          "tags": ["architecture", "review"],
+          "dependencies": ["ref-performance-patterns"]
         },
         {
           "skill": "devops",
