@@ -1,10 +1,17 @@
 {
-  "version": "2",
+  "version": "3",
   "plugins": [
     {
       "name": "dev-team",
-      "description": "Generic development team: backend engineer, frontend engineer, and QA/tester.",
+      "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Context-aware, not product-specific.",
       "skills": [
+        {
+          "skill": "designer",
+          "installAs": "designer",
+          "description": "Senior product designer — reads existing design system and user context before proposing. Implements in the project's stack.",
+          "file": "plugins/dev-team/designer.md",
+          "tags": ["design", "ux", "frontend"]
+        },
         {
           "skill": "backend",
           "installAs": "dev-team-backend",
@@ -25,6 +32,26 @@
           "description": "QA engineer / TDD lead — test case definition, coverage review, framework-agnostic.",
           "file": "plugins/dev-team/tester.md",
           "tags": ["testing", "tdd", "qa"]
+        }
+      ]
+    },
+    {
+      "name": "product",
+      "description": "Product and squad management: PM for discovery/prioritization, manager for orchestrating the full team.",
+      "skills": [
+        {
+          "skill": "pm",
+          "installAs": "pm",
+          "description": "Senior product manager — translates user problems into scoped, prioritized work. Reads project context before opining.",
+          "file": "plugins/product/pm.md",
+          "tags": ["product", "discovery", "prioritization"]
+        },
+        {
+          "skill": "manager",
+          "installAs": "manager",
+          "description": "Squad orchestrator — routes requests, enforces quality gates, never implements code.",
+          "file": "plugins/product/manager.md",
+          "tags": ["manager", "orchestrator"]
         }
       ]
     },
@@ -50,19 +77,19 @@
     },
     {
       "name": "engineering",
-      "description": "Cross-cutting engineering roles: architect, git/CI standards, DevOps.",
+      "description": "Cross-cutting engineering roles: architect, DevOps, and git/CI standards.",
       "skills": [
         {
           "skill": "architect",
           "installAs": "architect",
-          "description": "Code quality, design decisions, performance, scalability review.",
+          "description": "Software architect — code quality, design decisions, performance, scalability review.",
           "file": "plugins/engineering/architect.md",
           "tags": ["architecture", "review"]
         },
         {
           "skill": "devops",
           "installAs": "devops",
-          "description": "CI/CD, IaC, GitOps, cost optimization, infra incidents.",
+          "description": "DevOps/SRE — CI/CD, IaC, GitOps, cost optimization, infra incidents.",
           "file": "plugins/engineering/devops.md",
           "tags": ["infra", "devops", "ci"]
         },
@@ -72,54 +99,6 @@
           "description": "Git discipline, CI hygiene, commit and PR message standards.",
           "file": "plugins/engineering/commit-and-pr-standards.md",
           "tags": ["git", "ci"]
-        }
-      ]
-    },
-    {
-      "name": "aposent",
-      "description": "Full squad for aposent.ai — previdenciário SaaS (Laravel + Inertia + React).",
-      "skills": [
-        {
-          "skill": "manager",
-          "installAs": "aposent-manager",
-          "description": "Squad orchestrator — coordinates PM, design, backend, QA, security, legal gates.",
-          "file": "plugins/aposent/manager.md",
-          "tags": ["manager", "orchestrator"]
-        },
-        {
-          "skill": "design",
-          "installAs": "aposent-design",
-          "description": "Senior UI/UX designer — prazo-first design system, Inertia + Radix UI + Tailwind.",
-          "file": "plugins/aposent/design.md",
-          "tags": ["design", "frontend", "ux"]
-        },
-        {
-          "skill": "backend",
-          "installAs": "aposent-backend",
-          "description": "Laravel/PHP implementation specialist for aposent.ai.",
-          "file": "plugins/aposent/backend.md",
-          "tags": ["backend", "laravel"]
-        },
-        {
-          "skill": "pm",
-          "installAs": "aposent-pm",
-          "description": "Product discovery and prioritization for the aposent.ai platform.",
-          "file": "plugins/aposent/pm.md",
-          "tags": ["product"]
-        },
-        {
-          "skill": "qa",
-          "installAs": "aposent-qa",
-          "description": "Browser-based E2E validation via Playwright on Laravel + Inertia.js stack.",
-          "file": "plugins/aposent/qa.md",
-          "tags": ["qa", "playwright"]
-        },
-        {
-          "skill": "legal",
-          "installAs": "aposent-legal",
-          "description": "Direito Previdenciário + LGPD + sigilo OAB compliance gate.",
-          "file": "plugins/aposent/legal.md",
-          "tags": ["legal", "lgpd", "compliance"]
         }
       ]
     }

@@ -1,11 +1,11 @@
 {
-  "name": "@origammi/skills",
-  "version": "0.1.0",
-  "description": "Origammi private Claude Code skills marketplace",
+  "name": "@origammi/agents-marketplace",
+  "version": "0.3.0",
+  "description": "Origammi private agents marketplace — generic, context-aware AI agents for any project",
   "private": true,
   "type": "module",
   "bin": {
-    "skills": "./dist/index.js"
+    "agents": "./dist/index.js"
   },
   "scripts": {
     "dev": "tsx src/index.ts",

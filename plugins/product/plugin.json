@@ -1,0 +1,5 @@
+{
+  "name": "product",
+  "description": "Product and squad management: PM for discovery/prioritization, manager for orchestrating the full team.",
+  "skills": ["pm", "manager"]
+}
