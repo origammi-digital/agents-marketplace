@@ -1,5 +1,5 @@
 {
-  "version": "4",
+  "version": "5",
   "plugins": [
     {
       "name": "dev-team",
@@ -113,6 +113,39 @@
           "description": "Git discipline — Conventional Commits format, small focused commits, branch from main, CI hygiene.",
           "file": "plugins/engineering/commit-and-pr-standards.md",
           "tags": ["git", "ci"]
+        }
+      ]
+    },
+    {
+      "name": "llm-eval",
+      "description": "LLM evaluation and testing: behavioral assertions, regression tracking, and safety testing for AI agents and skills using DeepEval.",
+      "skills": [
+        {
+          "skill": "llm-eval",
+          "installAs": "llm-eval",
+          "description": "LLM evaluation engineer using DeepEval — correctness, groundedness, hallucination detection, prompt injection defense, agent regression suites.",
+          "file": "plugins/llm-eval/deepeval.md",
+          "tags": ["llm", "eval", "testing", "ai"]
+        }
+      ]
+    },
+    {
+      "name": "references",
+      "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed. Install to make them available as context.",
+      "skills": [
+        {
+          "skill": "ref-testing-frameworks",
+          "installAs": "ref-testing-frameworks",
+          "description": "Reference: PHPUnit, Vitest, React Testing Library, Playwright, Go testify, and pytest code patterns.",
+          "file": "plugins/references/testing-frameworks.md",
+          "tags": ["testing", "reference"]
+        },
+        {
+          "skill": "ref-performance-patterns",
+          "installAs": "ref-performance-patterns",
+          "description": "Reference: N+1, unbounded queries, sequential vs parallel async, partial failure consistency, TOCTOU patterns.",
+          "file": "plugins/references/performance-patterns.md",
+          "tags": ["performance", "reference"]
         }
       ]
     }

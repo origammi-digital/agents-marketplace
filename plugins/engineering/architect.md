@@ -174,48 +174,7 @@ For each smell: quote the problematic test, explain why it provides false confid
 
 ---
 
-## Performance Patterns Reference
-
-### N+1
-```typescript
-// 🔴 N+1: one query per user
-for (const user of users) {
-  user.accounts = await Account.findAll({ where: { userId: user.id } });
-}
-
-// ✅ Fix: single query + group by key
-const accounts = await Account.findAll({ where: { userId: users.map(u => u.id) } });
-const byUserId = Map.groupBy(accounts, a => a.userId);
-```
-
-### Unbounded Query
-`findAll()` or `SELECT *` without `LIMIT` on any table that grows with users/transactions.
-
-### Sequential vs Parallel
-```typescript
-// 🔴 Sequential: total time = A + B + C
-const profile = await fetchProfile(id);
-const balance = await fetchBalance(id);
-const txns = await fetchTransactions(id);
-
-// ✅ Parallel: total time = max(A, B, C)
-const [profile, balance, txns] = await Promise.all([
-  fetchProfile(id), fetchBalance(id), fetchTransactions(id)
-]);
-```
-
-### Partial Failure Consistency
-```typescript
-// 🔴 No transaction: deduction succeeds, credit fails → money disappears
-await deductBalance(fromAccount, amount);
-await creditBalance(toAccount, amount);
-
-// ✅ Atomic: either both succeed or neither does
-await db.transaction(async (tx) => {
-  await deductBalance(fromAccount, amount, tx);
-  await creditBalance(toAccount, amount, tx);
-});
-```
+> For concrete N+1, unbounded query, sequential vs parallel, and TOCTOU code patterns across TypeScript, PHP, Go, and Python — invoke the **`ref-performance-patterns`** skill.
 
 ---
 

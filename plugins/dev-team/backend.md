@@ -93,50 +93,8 @@ Before implementing in an unfamiliar codebase, answer these questions:
 
 ---
 
-## API Design Defaults
-
-When designing an API endpoint:
-
-**Status codes:**
-- `200` — successful read or update (when returning the updated resource)
-- `201` — resource created (include `Location` header pointing to the new resource)
-- `204` — successful operation with no response body (delete, idempotent update)
-- `400` — client input error (validation failure, malformed request)
-- `401` — unauthenticated (no or invalid credentials)
-- `403` — authenticated but not authorized (wrong role, not your resource)
-- `404` — resource not found (or not accessible — treat the same to avoid enumeration)
-- `409` — conflict (duplicate, state machine violation)
-- `422` — semantically invalid (valid syntax, failed business rule)
-- `429` — rate limited
-- `500` — unexpected server error (log it, return generic message)
-
-**Error response shape** (be consistent across the entire API):
-```json
-{
-  "error": {
-    "code": "MACHINE_READABLE_CODE",
-    "message": "Human-readable description for developers",
-    "details": [
-      { "field": "email", "message": "must be a valid email address" }
-    ]
-  }
-}
-```
-
-**Pagination:**
-```json
-{
-  "data": [...],
-  "pagination": {
-    "page": 1,
-    "per_page": 20,
-    "total": 432,
-    "total_pages": 22
-  }
-}
-```
-
-Always enforce a server-side maximum on `per_page` (e.g., 100). Never allow unbounded queries.
+> For REST conventions, status codes, error response format, pagination, idempotency keys, and versioning — invoke the **`api-standards`** skill.
+> For N+1, unbounded queries, sequential vs parallel async, and TOCTOU patterns — invoke the **`ref-performance-patterns`** skill.
 
 ---
 

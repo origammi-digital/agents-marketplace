@@ -1,6 +1,6 @@
 # @origammi/agents-marketplace
 
-Private marketplace of generic, context-aware AI agents for Origammi projects.
+Private marketplace of generic, senior-grade AI agents for Origammi projects.
 
 Works with **Claude Code, Cursor, Codex, and Gemini**. Same agent content, adapted to each platform's format.
 
@@ -18,7 +18,7 @@ Then **ask your AI to install agents for you**:
 
 > "List the available agent plugins and install the ones I need."
 
-The AI reads this repo's `CLAUDE.md` / `AGENTS.md`, lists available plugins, asks your platform, and runs the installation.
+The AI reads `CLAUDE.md` / `AGENTS.md`, lists available plugins, asks your platform, and runs the installation.
 
 ---
 
@@ -29,18 +29,24 @@ The AI reads this repo's `CLAUDE.md` / `AGENTS.md`, lists available plugins, ask
 | `dev-team` | designer, backend, frontend, tester |
 | `product` | pm, manager (squad orchestrator) |
 | `security` | red-team, blue-team |
-| `engineering` | architect, devops, commit-and-pr-standards |
+| `engineering` | architect, devops, observability, api-standards, commit-and-pr-standards |
+| `llm-eval` | llm-eval (DeepEval-based behavioral testing) |
+| `references` | ref-testing-frameworks, ref-performance-patterns |
+
+**references** are on-demand skills invoked by other agents when they need detailed code patterns. Install them alongside the main plugins.
 
 ---
 
 ## Manual CLI reference
 
 ```bash
-agents list                                        # list all agents
-agents install dev-team                            # Claude Code
-agents export dev-team --platform cursor           # Cursor (.cursor/rules/)
-agents export dev-team --platform codex            # Codex (AGENTS.md)
-agents export dev-team --platform gemini           # Gemini (GEMINI.md)
+agents list                                           # list all agents
+agents install dev-team                               # Claude Code
+agents install dev-team references                    # with reference skills
+agents install --all                                  # everything
+agents export dev-team --platform cursor              # Cursor (.cursor/rules/)
+agents export dev-team --platform codex               # Codex (AGENTS.md)
+agents export dev-team --platform gemini              # Gemini (GEMINI.md)
 agents export --all --platform gemini --output ~/.gemini  # Gemini global
 ```
 

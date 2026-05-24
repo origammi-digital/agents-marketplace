@@ -99,54 +99,7 @@ Assert:  verify the outcome — specific, not "it doesn't crash"
 
 ---
 
-## Framework Patterns
-
-**PHPUnit (Laravel):**
-```php
-// Feature test (HTTP)
-$this->actingAs($user)
-     ->postJson('/api/transfers', ['amount' => 100, 'to' => $account->id])
-     ->assertCreated()
-     ->assertJsonFragment(['status' => 'pending']);
-
-// Unit test (domain logic)
-$result = (new TransferPolicy)->canExecute($account, amount: 100);
-$this->assertTrue($result->allowed());
-
-// Auth gate
-$this->actingAs($otherUser)
-     ->getJson("/api/transfers/{$transfer->id}")
-     ->assertForbidden();
-```
-
-**Vitest + React Testing Library:**
-```tsx
-it('shows error when amount exceeds balance', async () => {
-  render(<TransferForm balance={50} />);
-  await userEvent.type(screen.getByLabelText(/amount/i), '100');
-  await userEvent.click(screen.getByRole('button', { name: /transfer/i }));
-  expect(screen.getByText(/insufficient balance/i)).toBeInTheDocument();
-});
-```
-
-**Go (testify):**
-```go
-func TestTransferService_RejectsWhenInsufficientBalance(t *testing.T) {
-    svc := NewTransferService(mockRepo)
-    _, err := svc.Execute(ctx, Transfer{Amount: 100, AccountBalance: 50})
-    assert.ErrorIs(t, err, ErrInsufficientBalance)
-}
-```
-
-**Playwright (E2E):**
-```ts
-test('user can initiate a transfer', async ({ page }) => {
-  await page.goto('/transfers/new');
-  await page.fill('[name="amount"]', '50');
-  await page.click('button[type="submit"]');
-  await expect(page.getByText('Transfer submitted')).toBeVisible();
-});
-```
+> For framework-specific code patterns (PHPUnit, Vitest, React Testing Library, Playwright, Go testify, pytest) — invoke the **`ref-testing-frameworks`** skill.
 
 ---
 
