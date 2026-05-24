@@ -94,7 +94,7 @@ Before implementing in an unfamiliar codebase, answer these questions:
 ---
 
 > For REST conventions, status codes, error response format, pagination, idempotency keys, and versioning — invoke the **`api-standards`** skill.
-> For N+1, unbounded queries, sequential vs parallel async, and TOCTOU patterns — invoke the **`ref-performance-patterns`** skill.
+> For N+1, unbounded queries, sequential vs parallel async, and TOCTOU patterns — read **`ref-performance-patterns.md`** in this skill's directory.
 
 ---
 

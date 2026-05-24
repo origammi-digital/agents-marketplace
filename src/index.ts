@@ -22,6 +22,7 @@ interface SkillEntry {
   file: string;
   tags: string[];
   version: string;
+  isReference?: boolean;
   dependencies?: string[];
 }
 
@@ -114,6 +115,7 @@ function resolveTargets(catalog: Catalog, targets: string[], all: boolean): Skil
   return out;
 }
 
+/** Returns only non-reference dependencies that need to be installed as separate skills. */
 function resolveDependencies(catalog: Catalog, skills: SkillEntry[]): SkillEntry[] {
   const seen = new Set(skills.map(s => s.installAs));
   const result = [...skills];
@@ -128,6 +130,8 @@ function resolveDependencies(catalog: Catalog, skills: SkillEntry[]): SkillEntry
         console.error(`  ✗ Dependency "${dep}" required by "${skill.installAs}" not found in catalog`);
         process.exit(1);
       }
+      // References are companion files — installed alongside the skill, not as separate skills
+      if (found.entry.isReference) continue;
       seen.add(dep);
       result.push(found.entry);
       queue.push(found.entry);
@@ -137,9 +141,19 @@ function resolveDependencies(catalog: Catalog, skills: SkillEntry[]): SkillEntry
   return result;
 }
 
+/** Returns reference dependencies that are copied as companion files into the skill directory. */
+function collectReferences(catalog: Catalog, entry: SkillEntry): SkillEntry[] {
+  const refs: SkillEntry[] = [];
+  for (const dep of entry.dependencies ?? []) {
+    const found = findSkillByInstallAs(catalog, dep);
+    if (found?.entry.isReference) refs.push(found.entry);
+  }
+  return refs;
+}
+
 // ── Claude Code adapter ───────────────────────────────────────────────────
 
-function installClaude(entry: SkillEntry, force: boolean): void {
+function installClaude(catalog: Catalog, entry: SkillEntry, force: boolean): void {
   const meta = getInstalledMeta(entry.installAs);
   if (isInstalled(entry.installAs) && !force) {
     if (meta && meta.version === entry.version) {
@@ -159,6 +173,15 @@ function installClaude(entry: SkillEntry, force: boolean): void {
   const dest = join(CLAUDE_SKILLS_DIR, entry.installAs);
   mkdirSync(dest, { recursive: true });
   copyFileSync(src, join(dest, 'skill.md'));
+
+  // Copy reference companions into the skill directory as <name>.md
+  for (const ref of collectReferences(catalog, entry)) {
+    const refSrc = skillFilePath(ref);
+    if (existsSync(refSrc)) {
+      copyFileSync(refSrc, join(dest, `${ref.installAs}.md`));
+    }
+  }
+
   const newMeta: InstalledMeta = { version: entry.version, installedAt: new Date().toISOString() };
   writeFileSync(join(dest, 'meta.json'), JSON.stringify(newMeta, null, 2));
   const prev = meta ? ` (was ${meta.version})` : '';
@@ -242,7 +265,7 @@ program
     if (opts.plugin) plugins = plugins.filter(p => p.name === opts.plugin);
 
     for (const plugin of plugins) {
-      let skills = plugin.skills;
+      let skills = plugin.skills.filter(s => !s.isReference);
       if (opts.tag) skills = skills.filter(s => s.tags.includes(opts.tag));
       if (opts.updates) skills = skills.filter(s => {
         const meta = getInstalledMeta(s.installAs);
@@ -314,7 +337,7 @@ program
     if (toInstall.length === 0) { console.log('Nothing to install or update.'); return; }
 
     console.log(`Installing ${toInstall.length} agent(s) into Claude Code...`);
-    for (const entry of toInstall) installClaude(entry, opts.force ?? false);
+    for (const entry of toInstall) installClaude(catalog, entry, opts.force ?? false);
     console.log('\nDone. Restart Claude Code to load new agents.');
   });
 

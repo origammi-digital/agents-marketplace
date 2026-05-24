@@ -154,7 +154,8 @@
           "skill": "ref-testing-frameworks",
           "installAs": "ref-testing-frameworks",
           "version": "1.0.0",
-          "description": "Reference: PHPUnit, Vitest, React Testing Library, Playwright, Go testify, and pytest code patterns.",
+          "isReference": true,
+          "description": "Reference companion: PHPUnit, Vitest, React Testing Library, Playwright, Go testify, and pytest code patterns.",
           "file": "plugins/references/testing-frameworks.md",
           "tags": ["testing", "reference"]
         },
@@ -162,7 +163,8 @@
           "skill": "ref-performance-patterns",
           "installAs": "ref-performance-patterns",
           "version": "1.0.0",
-          "description": "Reference: N+1, unbounded queries, sequential vs parallel async, partial failure consistency, TOCTOU patterns.",
+          "isReference": true,
+          "description": "Reference companion: N+1, unbounded queries, sequential vs parallel async, partial failure consistency, TOCTOU patterns.",
           "file": "plugins/references/performance-patterns.md",
           "tags": ["performance", "reference"]
         }

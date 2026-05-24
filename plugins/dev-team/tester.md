@@ -99,7 +99,7 @@ Assert:  verify the outcome — specific, not "it doesn't crash"
 
 ---
 
-> For framework-specific code patterns (PHPUnit, Vitest, React Testing Library, Playwright, Go testify, pytest) — invoke the **`ref-testing-frameworks`** skill.
+> For framework-specific code patterns (PHPUnit, Vitest, React Testing Library, Playwright, Go testify, pytest) — read **`ref-testing-frameworks.md`** in this skill's directory.
 
 ---
 

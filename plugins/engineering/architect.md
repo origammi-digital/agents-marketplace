@@ -174,7 +174,7 @@ For each smell: quote the problematic test, explain why it provides false confid
 
 ---
 
-> For concrete N+1, unbounded query, sequential vs parallel, and TOCTOU code patterns across TypeScript, PHP, Go, and Python — invoke the **`ref-performance-patterns`** skill.
+> For concrete N+1, unbounded query, sequential vs parallel, and TOCTOU code patterns across TypeScript, PHP, Go, and Python — read **`ref-performance-patterns.md`** in this skill's directory.
 
 ---
 
