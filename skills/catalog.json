@@ -1,0 +1,96 @@
+{
+  "version": "1",
+  "skills": [
+    {
+      "name": "red-team",
+      "category": "universal",
+      "description": "Adversary simulation, kill chain analysis, exploitation path modeling. Gate before every merge.",
+      "file": "universal/red-team.md",
+      "tags": ["security", "review"]
+    },
+    {
+      "name": "blue-team",
+      "category": "universal",
+      "description": "Detection engineering, audit trail completeness, IR readiness, hardening. Gate before every merge.",
+      "file": "universal/blue-team.md",
+      "tags": ["security", "review"]
+    },
+    {
+      "name": "architect",
+      "category": "universal",
+      "description": "Code quality, design decisions, performance, scalability review.",
+      "file": "universal/architect.md",
+      "tags": ["review", "architecture"]
+    },
+    {
+      "name": "tdd-lead",
+      "category": "universal",
+      "description": "Test-first discipline, coverage review, test case definition.",
+      "file": "universal/tdd-lead.md",
+      "tags": ["testing"]
+    },
+    {
+      "name": "commit-and-pr-standards",
+      "category": "universal",
+      "description": "Git discipline, CI hygiene, commit and PR message standards.",
+      "file": "universal/commit-and-pr-standards.md",
+      "tags": ["git", "ci"]
+    },
+    {
+      "name": "devops",
+      "category": "universal",
+      "description": "CI/CD, IaC, GitOps, cost optimization, infra incidents.",
+      "file": "universal/devops.md",
+      "tags": ["infra", "devops"]
+    },
+    {
+      "name": "aposent-manager",
+      "category": "aposent",
+      "description": "Squad orchestrator for aposent.ai — coordinates full team from PM to security gates.",
+      "file": "aposent/aposent-manager.md",
+      "tags": ["manager", "orchestrator"]
+    },
+    {
+      "name": "aposent-design",
+      "category": "aposent",
+      "description": "Senior UI/UX designer for aposent.ai — prazo-first design system, Inertia + Radix UI + Tailwind.",
+      "file": "aposent/aposent-design.md",
+      "tags": ["design", "frontend"]
+    },
+    {
+      "name": "aposent-backend",
+      "category": "aposent",
+      "description": "Laravel/PHP implementation specialist for aposent.ai.",
+      "file": "aposent/aposent-backend.md",
+      "tags": ["backend", "laravel"]
+    },
+    {
+      "name": "aposent-pm",
+      "category": "aposent",
+      "description": "Product discovery and prioritization for the aposent.ai platform.",
+      "file": "aposent/aposent-pm.md",
+      "tags": ["product"]
+    },
+    {
+      "name": "aposent-qa",
+      "category": "aposent",
+      "description": "Browser-based E2E validation via Playwright on Laravel + Inertia.js stack.",
+      "file": "aposent/aposent-qa.md",
+      "tags": ["qa", "testing"]
+    },
+    {
+      "name": "aposent-legal",
+      "category": "aposent",
+      "description": "Direito Previdenciário + LGPD + sigilo OAB compliance gate.",
+      "file": "aposent/aposent-legal.md",
+      "tags": ["legal", "compliance"]
+    },
+    {
+      "name": "lumora-manager",
+      "category": "lumora",
+      "description": "Squad orchestrator for lumora.",
+      "file": "lumora/lumora-manager.md",
+      "tags": ["manager", "orchestrator"]
+    }
+  ]
+}
