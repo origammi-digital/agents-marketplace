@@ -216,6 +216,61 @@ Called by the red team after Mode D (Adversary Simulation Planning). Given the r
 - [ ] Log levels appropriate: INFO for normal ops, WARN for recoverable anomalies, ERROR for failures that need attention
 - [ ] Critical alerts wired: failed DB connection, job queue stall, auth spike, large financial operation
 
+### LLM & Prompt Injection Monitoring (apply when any LLM integration is present)
+
+**Logging requirements:**
+- [ ] All LLM inputs (user message + assembled prompt) logged with: `timestamp`, `actor_id`, `session_id`, `prompt_hash`, `token_count` — never log full prompt if it contains PII; log a hash + truncated preview
+- [ ] All LLM outputs logged with: `completion_hash`, `tool_calls_made` (names + param hashes), `output_token_count`, `finish_reason`
+- [ ] Tool calls logged separately: `tool_name`, `parameters_hash`, `triggered_by_user` (false if LLM-generated), `result_status`
+- [ ] Injection attempt patterns matched and logged as security events (see detection rules below)
+
+**Detection rules:**
+
+```
+# Direct injection — goal hijacking patterns
+event.type = "llm.input" AND (
+  event.content MATCHES "ignore (your |previous |all )?(instructions|system|prompt)"
+  OR event.content MATCHES "you are now|pretend you are|act as (DAN|jailbreak|unrestricted)"
+  OR event.content MATCHES "repeat (your|the) (instructions|system prompt|context)"
+  OR event.content MATCHES "what (was|were) (your|the) (original )?instructions"
+)
+→ Alert: Prompt injection attempt — goal hijacking or extraction [HIGH]
+
+# Indirect injection — anomalous instruction-like content in external sources
+event.type = "llm.retrieved_content" AND (
+  event.content MATCHES "SYSTEM:|<system>|\\[INST\\]|### Instruction"
+  OR event.content MATCHES "ignore previous|new instructions:|your role is now"
+)
+→ Alert: Indirect prompt injection in retrieved content [HIGH]
+
+# Tool call anomaly — LLM attempting unexpected tool
+event.type = "llm.tool_call" AND event.tool_name NOT IN allowed_tools_for_role
+→ Alert: LLM attempted unauthorized tool call [CRITICAL]
+
+# Exfiltration via output — generated URL contains encoded data
+event.type = "llm.output" AND event.content MATCHES "https?://[^\\s]+\\?(.*=.*){3,}"
+→ Alert: Possible data exfiltration in LLM-generated URL [HIGH]
+
+# Context stuffing — unusually large input
+event.type = "llm.input" AND event.token_count > BASELINE_P99 * 3
+→ Alert: Anomalous LLM input size — possible context poisoning [MEDIUM]
+```
+
+**IR readiness for LLM incidents:**
+- [ ] Can reconstruct: which user sent the injected input? (actor_id in input log)
+- [ ] Can reconstruct: which tool calls were made as a result? (tool call log with session_id)
+- [ ] Can determine: was sensitive data in context at time of injection? (context snapshot log or actor's data access log)
+- [ ] Can determine: what did the LLM output after the injection? (output log)
+- [ ] Session replay possible from logs without re-running the LLM
+
+**Hardening controls:**
+- [ ] Input filter applied before prompt assembly — known injection patterns flagged or blocked
+- [ ] External content (RAG, web, file) processed through a separate "untrusted content" pipeline that strips instruction-like patterns before LLM sees it
+- [ ] Tool call allowlist enforced at the API layer — LLM output requesting a tool not on the allowlist is rejected, not executed
+- [ ] Structured output schema enforced via grammar/JSON mode — LLM cannot deviate from expected output shape when driving application logic
+- [ ] Rate limit on LLM endpoints per user — prevents automated injection probing
+- [ ] System prompt stored server-side and never sent to client — client cannot read or manipulate it
+
 ### Go-specific (b2p-backend)
 - [ ] `logger.InfoS` / `logger.WarnS` / `logger.ErrorS` used consistently (not `fmt.Println` or `log.Printf`)
 - [ ] No `logger.WithValue("token", ...)` or `logger.WithValue("password", ...)` — PII/secrets never in log values
