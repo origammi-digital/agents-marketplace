@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { readFileSync, existsSync, mkdirSync, copyFileSync, rmSync } from 'fs';
-import { join, dirname } from 'path';
+import {
+  readFileSync, writeFileSync, existsSync,
+  mkdirSync, copyFileSync, rmSync,
+} from 'fs';
+import { join, dirname, resolve } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
 
@@ -9,6 +12,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CLAUDE_SKILLS_DIR = join(homedir(), '.claude', 'skills');
 const CATALOG_PATH = join(__dirname, '..', 'skills', 'catalog.json');
 const REPO_ROOT = join(__dirname, '..');
+
+// ── Types ──────────────────────────────────────────────────────────────────
 
 interface SkillEntry {
   skill: string;
@@ -29,20 +34,77 @@ interface Catalog {
   plugins: Plugin[];
 }
 
+type Platform = 'claude' | 'cursor' | 'codex' | 'gemini';
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+
 function loadCatalog(): Catalog {
   return JSON.parse(readFileSync(CATALOG_PATH, 'utf8'));
+}
+
+function skillFilePath(entry: SkillEntry): string {
+  return join(REPO_ROOT, 'plugins', entry.file.replace('plugins/', ''));
+}
+
+function readSkillContent(entry: SkillEntry): string {
+  return readFileSync(skillFilePath(entry), 'utf8');
+}
+
+/** Strip YAML frontmatter (between the first two `---` lines). */
+function stripFrontmatter(content: string): string {
+  const lines = content.split('\n');
+  if (lines[0].trim() !== '---') return content;
+  const end = lines.indexOf('---', 1);
+  if (end === -1) return content;
+  return lines.slice(end + 1).join('\n').replace(/^\n+/, '');
+}
+
+/** Extract frontmatter value by key. */
+function frontmatterValue(content: string, key: string): string {
+  const match = content.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'));
+  return match ? match[1].trim() : '';
 }
 
 function isInstalled(installAs: string): boolean {
   return existsSync(join(CLAUDE_SKILLS_DIR, installAs, 'skill.md'));
 }
 
-function installSkill(entry: SkillEntry, force = false): void {
+function findPlugin(catalog: Catalog, name: string): Plugin | undefined {
+  return catalog.plugins.find(p => p.name === name);
+}
+
+function findSkillByInstallAs(
+  catalog: Catalog,
+  installAs: string,
+): { plugin: Plugin; entry: SkillEntry } | undefined {
+  for (const plugin of catalog.plugins) {
+    const entry = plugin.skills.find(s => s.installAs === installAs);
+    if (entry) return { plugin, entry };
+  }
+}
+
+function resolveTargets(catalog: Catalog, targets: string[], all: boolean): SkillEntry[] {
+  if (all) return catalog.plugins.flatMap(p => p.skills);
+  const out: SkillEntry[] = [];
+  for (const target of targets) {
+    const plugin = findPlugin(catalog, target);
+    if (plugin) { out.push(...plugin.skills); continue; }
+    const found = findSkillByInstallAs(catalog, target);
+    if (found) { out.push(found.entry); continue; }
+    console.error(`✗ Unknown plugin or skill: "${target}"`);
+    process.exit(1);
+  }
+  return out;
+}
+
+// ── Claude Code adapter ───────────────────────────────────────────────────
+
+function installClaude(entry: SkillEntry, force: boolean): void {
   if (isInstalled(entry.installAs) && !force) {
     console.log(`  — ${entry.installAs} already installed (--force to overwrite)`);
     return;
   }
-  const src = join(REPO_ROOT, 'plugins', entry.file.replace('plugins/', ''));
+  const src = skillFilePath(entry);
   if (!existsSync(src)) {
     console.error(`  ✗ ${entry.installAs}: file not found at ${entry.file}`);
     return;
@@ -53,30 +115,88 @@ function installSkill(entry: SkillEntry, force = false): void {
   console.log(`  ✓ ${entry.installAs}`);
 }
 
-function findPlugin(catalog: Catalog, name: string): Plugin | undefined {
-  return catalog.plugins.find(p => p.name === name);
-}
+// ── Cursor adapter ────────────────────────────────────────────────────────
 
-function findSkillByInstallAs(catalog: Catalog, installAs: string): { plugin: Plugin; entry: SkillEntry } | undefined {
-  for (const plugin of catalog.plugins) {
-    const entry = plugin.skills.find(s => s.installAs === installAs);
-    if (entry) return { plugin, entry };
+/**
+ * Cursor rules: .cursor/rules/<name>.mdc
+ * Format: YAML frontmatter (description, globs, alwaysApply) + markdown body
+ */
+function exportCursor(skills: SkillEntry[], outDir: string): void {
+  const rulesDir = join(outDir, '.cursor', 'rules');
+  mkdirSync(rulesDir, { recursive: true });
+
+  for (const entry of skills) {
+    const raw = readSkillContent(entry);
+    const description = frontmatterValue(raw, 'description') || entry.description;
+    const body = stripFrontmatter(raw);
+
+    const mdc = `---
+description: ${description}
+globs:
+alwaysApply: false
+---
+
+${body}`.trimEnd() + '\n';
+
+    const dest = join(rulesDir, `${entry.installAs}.mdc`);
+    writeFileSync(dest, mdc, 'utf8');
+    console.log(`  ✓ .cursor/rules/${entry.installAs}.mdc`);
   }
 }
+
+// ── Codex (OpenAI) adapter ────────────────────────────────────────────────
+
+/**
+ * Codex reads AGENTS.md from repo root.
+ * Each agent is a H2 section with its description and full prompt body.
+ */
+function exportCodex(skills: SkillEntry[], outDir: string): string {
+  const sections = skills.map(entry => {
+    const raw = readSkillContent(entry);
+    const body = stripFrontmatter(raw);
+    return `## ${entry.installAs}\n\n> ${entry.description}\n\n${body}`;
+  });
+
+  const content = `# Agents\n\n<!-- Generated by @origammi/agents-marketplace -->\n\n${sections.join('\n\n---\n\n')}\n`;
+  const dest = join(outDir, 'AGENTS.md');
+  writeFileSync(dest, content, 'utf8');
+  return dest;
+}
+
+// ── Gemini adapter ────────────────────────────────────────────────────────
+
+/**
+ * Gemini CLI reads GEMINI.md from repo root or ~/.gemini/GEMINI.md globally.
+ * Format: plain markdown, each agent a H2 section.
+ */
+function exportGemini(skills: SkillEntry[], outDir: string): string {
+  const sections = skills.map(entry => {
+    const raw = readSkillContent(entry);
+    const body = stripFrontmatter(raw);
+    return `## ${entry.installAs}\n\n> ${entry.description}\n\n${body}`;
+  });
+
+  const content = `# Agents\n\n<!-- Generated by @origammi/agents-marketplace -->\n\n${sections.join('\n\n---\n\n')}\n`;
+  const dest = join(outDir, 'GEMINI.md');
+  writeFileSync(dest, content, 'utf8');
+  return dest;
+}
+
+// ── CLI ────────────────────────────────────────────────────────────────────
 
 const program = new Command();
 
 program
-  .name('skills')
-  .description('Origammi Claude Code skills marketplace')
-  .version('0.2.0');
+  .name('agents')
+  .description('Origammi agents marketplace — install or export AI agents for any platform')
+  .version('0.3.0');
 
 // LIST
 program
   .command('list')
-  .description('List all plugins and their skills')
+  .description('List all plugins and their agents')
   .option('-p, --plugin <name>', 'show only a specific plugin')
-  .option('-t, --tag <tag>', 'filter skills by tag')
+  .option('-t, --tag <tag>', 'filter by tag')
   .action((opts) => {
     const catalog = loadCatalog();
     let plugins = catalog.plugins;
@@ -89,7 +209,7 @@ program
 
       const installedCount = skills.filter(s => isInstalled(s.installAs)).length;
       console.log(`\n[${plugin.name}] ${plugin.description}`);
-      console.log(`  ${installedCount}/${skills.length} installed`);
+      console.log(`  ${installedCount}/${skills.length} installed (Claude Code)`);
       for (const s of skills) {
         const status = isInstalled(s.installAs) ? '✓' : '○';
         console.log(`  ${status} ${s.installAs.padEnd(32)} ${s.description.slice(0, 55)}`);
@@ -98,53 +218,82 @@ program
     console.log('\n✓ = installed  ○ = not installed');
   });
 
-// INSTALL
+// INSTALL (Claude Code)
 program
   .command('install [targets...]')
-  .description('Install skills. Targets: plugin name (installs all), or individual installAs names.')
-  .option('-a, --all', 'install all skills from all plugins')
-  .option('-f, --force', 'overwrite already installed skills')
+  .description('Install agents into Claude Code (~/.claude/skills/). Targets: plugin name or individual agent name.')
+  .option('-a, --all', 'install all agents')
+  .option('-f, --force', 'overwrite already installed agents')
   .action((targets: string[], opts) => {
     const catalog = loadCatalog();
-    const force: boolean = opts.force ?? false;
-    const toInstall: SkillEntry[] = [];
-
-    if (opts.all) {
-      catalog.plugins.forEach(p => toInstall.push(...p.skills));
-    } else if (targets.length === 0) {
-      console.error('Specify a plugin name, skill name, or --all');
+    if (targets.length === 0 && !opts.all) {
+      console.error('Specify a plugin name, agent name, or --all');
       process.exit(1);
-    } else {
-      for (const target of targets) {
-        const plugin = findPlugin(catalog, target);
-        if (plugin) {
-          toInstall.push(...plugin.skills);
-          continue;
-        }
-        const found = findSkillByInstallAs(catalog, target);
-        if (found) {
-          toInstall.push(found.entry);
-          continue;
-        }
-        console.error(`✗ Unknown plugin or skill: "${target}"`);
-        process.exit(1);
+    }
+    const toInstall = resolveTargets(catalog, targets, opts.all ?? false);
+    if (toInstall.length === 0) { console.log('Nothing to install.'); return; }
+
+    console.log(`Installing ${toInstall.length} agent(s) into Claude Code...`);
+    for (const entry of toInstall) installClaude(entry, opts.force ?? false);
+    console.log('\nDone. Restart Claude Code to load new agents.');
+  });
+
+// EXPORT (multi-platform)
+program
+  .command('export [targets...]')
+  .description('Export agents for a specific AI platform')
+  .requiredOption('-p, --platform <platform>', 'target platform: cursor | codex | gemini')
+  .option('-a, --all', 'export all agents')
+  .option('-o, --output <path>', 'output directory (default: current directory)')
+  .action((targets: string[], opts) => {
+    const catalog = loadCatalog();
+    const platform = opts.platform as Platform;
+    const validPlatforms: Platform[] = ['cursor', 'codex', 'gemini'];
+
+    if (!validPlatforms.includes(platform)) {
+      console.error(`✗ Unknown platform: "${platform}". Valid: ${validPlatforms.join(', ')}`);
+      process.exit(1);
+    }
+
+    if (targets.length === 0 && !opts.all) {
+      console.error('Specify a plugin name, agent name, or --all');
+      process.exit(1);
+    }
+
+    const skills = resolveTargets(catalog, targets, opts.all ?? false);
+    if (skills.length === 0) { console.log('Nothing to export.'); return; }
+
+    const outDir = resolve(opts.output ?? process.cwd());
+    console.log(`Exporting ${skills.length} agent(s) for ${platform} → ${outDir}\n`);
+
+    switch (platform) {
+      case 'cursor': {
+        exportCursor(skills, outDir);
+        console.log(`\nDone. Commit .cursor/rules/ to your project repo.`);
+        console.log(`Cursor picks up rules automatically when you open the project.`);
+        break;
+      }
+      case 'codex': {
+        const dest = exportCodex(skills, outDir);
+        console.log(`  ✓ ${dest}`);
+        console.log(`\nDone. Commit AGENTS.md to your project repo.`);
+        console.log(`Codex reads it automatically when running in that directory.`);
+        break;
+      }
+      case 'gemini': {
+        const dest = exportGemini(skills, outDir);
+        console.log(`  ✓ ${dest}`);
+        console.log(`\nDone. Commit GEMINI.md to your project repo.`);
+        console.log(`Gemini CLI reads it automatically when running in that directory.`);
+        break;
       }
     }
-
-    if (toInstall.length === 0) {
-      console.log('Nothing to install.');
-      return;
-    }
-
-    console.log(`Installing ${toInstall.length} skill(s)...`);
-    for (const entry of toInstall) installSkill(entry, force);
-    console.log('\nDone. Restart Claude Code to load new skills.');
   });
 
 // INFO
 program
   .command('info <target>')
-  .description('Show details for a plugin or skill')
+  .description('Show details for a plugin or agent')
   .action((target: string) => {
     const catalog = loadCatalog();
 
@@ -164,22 +313,22 @@ program
     const found = findSkillByInstallAs(catalog, target);
     if (found) {
       const { plugin, entry } = found;
-      console.log(`\nSkill:   ${entry.installAs}`);
+      console.log(`\nAgent:   ${entry.installAs}`);
       console.log(`Plugin:  ${plugin.name}`);
-      console.log(`Status:  ${isInstalled(entry.installAs) ? 'installed' : 'not installed'}`);
+      console.log(`Status:  ${isInstalled(entry.installAs) ? 'installed (Claude Code)' : 'not installed'}`);
       console.log(`Tags:    ${entry.tags.join(', ')}`);
       console.log(`\n${entry.description}`);
       return;
     }
 
-    console.error(`Unknown plugin or skill: "${target}"`);
+    console.error(`Unknown plugin or agent: "${target}"`);
     process.exit(1);
   });
 
-// UNINSTALL
+// UNINSTALL (Claude Code)
 program
   .command('uninstall <target>')
-  .description('Remove a plugin (all its skills) or a single skill')
+  .description('Remove a plugin or agent from Claude Code (~/.claude/skills/)')
   .action((target: string) => {
     const catalog = loadCatalog();
     const toRemove: SkillEntry[] = [];
@@ -189,17 +338,11 @@ program
       toRemove.push(...plugin.skills.filter(s => isInstalled(s.installAs)));
     } else {
       const found = findSkillByInstallAs(catalog, target);
-      if (!found) {
-        console.error(`Unknown plugin or skill: "${target}"`);
-        process.exit(1);
-      }
+      if (!found) { console.error(`Unknown plugin or agent: "${target}"`); process.exit(1); }
       toRemove.push(found.entry);
     }
 
-    if (toRemove.length === 0) {
-      console.log('Nothing to uninstall.');
-      return;
-    }
+    if (toRemove.length === 0) { console.log('Nothing to uninstall.'); return; }
 
     for (const entry of toRemove) {
       const path = join(CLAUDE_SKILLS_DIR, entry.installAs);
