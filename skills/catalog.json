@@ -8,6 +8,7 @@
         {
           "skill": "designer",
           "installAs": "designer",
+          "version": "2.0.0",
           "description": "Senior product designer — context-first, reads design system before proposing, implements in project stack, knows when to push back on scope.",
           "file": "plugins/dev-team/designer.md",
           "tags": ["design", "ux", "frontend"]
@@ -15,6 +16,7 @@
         {
           "skill": "backend",
           "installAs": "dev-team-backend",
+          "version": "2.0.0",
           "description": "Senior backend engineer — stack-agnostic, layered architecture, TDD-first, idempotency-aware, observability-first.",
           "file": "plugins/dev-team/backend.md",
           "tags": ["backend", "api", "database"]
@@ -22,6 +24,7 @@
         {
           "skill": "frontend",
           "installAs": "dev-team-frontend",
+          "version": "2.0.0",
           "description": "Senior frontend engineer — stack-agnostic, React + TypeScript primary, accessibility-first, security-aware, error boundaries.",
           "file": "plugins/dev-team/frontend.md",
           "tags": ["frontend", "react", "typescript"]
@@ -29,6 +32,7 @@
         {
           "skill": "tester",
           "installAs": "dev-team-tester",
+          "version": "2.0.0",
           "description": "QA engineer / TDD lead — test case definition, coverage review, mutation testing, contract testing, performance testing.",
           "file": "plugins/dev-team/tester.md",
           "tags": ["testing", "tdd", "qa"]
@@ -42,6 +46,7 @@
         {
           "skill": "pm",
           "installAs": "pm",
+          "version": "2.0.0",
           "description": "Senior product manager — JTBD discovery framework, Given/When/Then acceptance criteria, scope protection, friction analysis.",
           "file": "plugins/product/pm.md",
           "tags": ["product", "discovery", "prioritization"]
@@ -49,6 +54,7 @@
         {
           "skill": "manager",
           "installAs": "manager",
+          "version": "1.0.0",
           "description": "Squad orchestrator — routes requests, enforces quality gates, never implements code.",
           "file": "plugins/product/manager.md",
           "tags": ["manager", "orchestrator"]
@@ -62,6 +68,7 @@
         {
           "skill": "red-team",
           "installAs": "red-team",
+          "version": "2.0.0",
           "description": "Adversary simulation, kill chain analysis, exploitation path modeling, prompt injection threat modeling. Gate before every merge.",
           "file": "plugins/security/red-team.md",
           "tags": ["security", "offensive", "review"]
@@ -69,6 +76,7 @@
         {
           "skill": "blue-team",
           "installAs": "blue-team",
+          "version": "2.0.0",
           "description": "Detection engineering, audit trail completeness, IR readiness, hardening, LLM injection monitoring. Gate before every merge.",
           "file": "plugins/security/blue-team.md",
           "tags": ["security", "defensive", "review"]
@@ -82,6 +90,7 @@
         {
           "skill": "architect",
           "installAs": "architect",
+          "version": "2.0.0",
           "description": "Software architect — code quality, design decisions, performance, scalability, distributed systems review.",
           "file": "plugins/engineering/architect.md",
           "tags": ["architecture", "review"]
@@ -89,6 +98,7 @@
         {
           "skill": "devops",
           "installAs": "devops",
+          "version": "2.0.0",
           "description": "DevOps/Platform engineer — container-first, GitOps-native, CI/CD optimization, cost analysis, infra incident response.",
           "file": "plugins/engineering/devops.md",
           "tags": ["infra", "devops", "ci"]
@@ -96,6 +106,7 @@
         {
           "skill": "observability",
           "installAs": "observability",
+          "version": "1.0.0",
           "description": "Observability engineer — SLOs, error budgets, Four Golden Signals, structured logging, alerting strategy, OpenTelemetry.",
           "file": "plugins/engineering/observability.md",
           "tags": ["observability", "monitoring", "slo"]
@@ -103,6 +114,7 @@
         {
           "skill": "api-standards",
           "installAs": "api-standards",
+          "version": "1.0.0",
           "description": "API design standards — REST conventions, versioning, pagination, idempotency, error response format.",
           "file": "plugins/engineering/api-standards.md",
           "tags": ["api", "rest", "standards"]
@@ -110,6 +122,7 @@
         {
           "skill": "commit-and-pr-standards",
           "installAs": "commit-and-pr-standards",
+          "version": "2.0.0",
           "description": "Git discipline — Conventional Commits format, small focused commits, branch from main, CI hygiene.",
           "file": "plugins/engineering/commit-and-pr-standards.md",
           "tags": ["git", "ci"]
@@ -123,6 +136,7 @@
         {
           "skill": "llm-eval",
           "installAs": "llm-eval",
+          "version": "1.0.0",
           "description": "LLM evaluation engineer using DeepEval — correctness, groundedness, hallucination detection, prompt injection defense, agent regression suites.",
           "file": "plugins/llm-eval/deepeval.md",
           "tags": ["llm", "eval", "testing", "ai"]
@@ -136,6 +150,7 @@
         {
           "skill": "ref-testing-frameworks",
           "installAs": "ref-testing-frameworks",
+          "version": "1.0.0",
           "description": "Reference: PHPUnit, Vitest, React Testing Library, Playwright, Go testify, and pytest code patterns.",
           "file": "plugins/references/testing-frameworks.md",
           "tags": ["testing", "reference"]
@@ -143,6 +158,7 @@
         {
           "skill": "ref-performance-patterns",
           "installAs": "ref-performance-patterns",
+          "version": "1.0.0",
           "description": "Reference: N+1, unbounded queries, sequential vs parallel async, partial failure consistency, TOCTOU patterns.",
           "file": "plugins/references/performance-patterns.md",
           "tags": ["performance", "reference"]
