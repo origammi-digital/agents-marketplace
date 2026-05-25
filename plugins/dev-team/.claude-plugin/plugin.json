@@ -1,0 +1,9 @@
+{
+  "name": "dev-team",
+  "version": "2.0.0",
+  "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Stack-agnostic, senior-grade.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}

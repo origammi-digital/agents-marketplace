@@ -1,0 +1,9 @@
+{
+  "name": "references",
+  "version": "1.0.0",
+  "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}

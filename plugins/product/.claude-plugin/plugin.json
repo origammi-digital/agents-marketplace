@@ -1,0 +1,9 @@
+{
+  "name": "product",
+  "version": "2.0.0",
+  "description": "Product and squad management: PM for discovery/prioritization, manager for orchestrating the full team.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}

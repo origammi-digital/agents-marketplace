@@ -1,0 +1,9 @@
+{
+  "name": "engineering",
+  "version": "2.0.0",
+  "description": "Cross-cutting engineering: architect, DevOps, observability, API standards, and git/CI standards.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}
