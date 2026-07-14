@@ -157,6 +157,22 @@
       ]
     },
     {
+      "name": "meta",
+      "description": "Meta skills for maintaining the marketplace itself: how to author, edit, and test skills so they actually get used.",
+      "category": "development",
+      "tags": ["meta", "authoring", "skills"],
+      "skills": [
+        {
+          "skill": "writing-skills",
+          "installAs": "writing-skills",
+          "version": "1.0.0",
+          "description": "How to author, edit, and test a marketplace skill — role vs process shapes, description-as-trigger, rationalization tables, positive-recipe wording, multi-platform action language, and testing skills with llm-eval.",
+          "file": "plugins/meta/agents/writing-skills.md",
+          "tags": ["meta", "authoring", "skills"]
+        }
+      ]
+    },
+    {
       "name": "references",
       "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed. Install to make them available as context.",
       "category": "development",

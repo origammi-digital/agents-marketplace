@@ -1,0 +1,9 @@
+{
+  "name": "meta",
+  "version": "1.0.0",
+  "description": "Meta skills for maintaining the marketplace itself: how to author, edit, and test skills so they actually get used.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}
