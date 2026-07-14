@@ -77,6 +77,9 @@ Available plugins:
   product     — product manager, squad orchestrator
   security    — red-team (offensive), blue-team (defensive)
   engineering — architect, devops, observability, api-standards, git/CI standards
+  process     — systematic-debugging, TDD, planning, verification (how the work is conducted)
+  llm-eval    — LLM/agent behavior testing with DeepEval
+  meta        — writing-skills (how to author skills for this marketplace)
 
 Which plugins do you want? (you can pick multiple, or say "all")
 ```
