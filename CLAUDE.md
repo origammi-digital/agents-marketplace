@@ -138,6 +138,8 @@ Each skill has a `version` field in `catalog.json`. When a skill file is changed
 
 ## Adding a new agent
 
+> For the full method — how to make a skill that actually gets used (description-as-trigger, role vs process shapes, rationalization tables, positive-recipe wording, testing with `llm-eval`) — use the `writing-skills` meta skill (`plugins/meta/agents/writing-skills.md`). The steps below are the quick checklist.
+
 If the user wants to create a new agent:
 
 1. Ask: what role, what plugin category, what should the agent do?
