@@ -69,6 +69,17 @@
       ]
     },
     {
+      "name": "meta",
+      "description": "Meta skills for maintaining the marketplace itself: how to author, edit, and test skills so they actually get used.",
+      "source": "./plugins/meta",
+      "category": "development",
+      "tags": [
+        "meta",
+        "authoring",
+        "skills"
+      ]
+    },
+    {
       "name": "references",
       "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed. Install to make them available as context.",
       "source": "./plugins/references",
