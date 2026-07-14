@@ -247,10 +247,15 @@ function exportGemini(skills: SkillEntry[], outDir: string): string {
 
 const program = new Command();
 
+// Single source of truth for the CLI version: package.json
+const PKG_VERSION = (JSON.parse(
+  readFileSync(join(REPO_ROOT, 'package.json'), 'utf-8'),
+) as { version: string }).version;
+
 program
   .name('agents')
   .description('Origammi agents marketplace — install or export AI agents for any platform')
-  .version('0.4.0');
+  .version(PKG_VERSION);
 
 // LIST
 program
