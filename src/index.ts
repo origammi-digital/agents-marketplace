@@ -29,6 +29,8 @@ interface SkillEntry {
 interface Plugin {
   name: string;
   description: string;
+  category?: string;
+  tags?: string[];
   skills: SkillEntry[];
 }
 
@@ -479,6 +481,63 @@ program
         console.log(`  ✓ removed ${entry.installAs}`);
       }
     }
+  });
+
+// SYNC — regenerate the native Claude Code manifests from catalog.json (single source of truth)
+const MP_OWNER = { name: 'Origammi Digital', url: 'https://github.com/origammi-digital' };
+
+/** Highest semver among a plugin's skills — used as the plugin package version. */
+function maxSkillVersion(plugin: Plugin): string {
+  const parse = (v: string) => v.split('.').map(n => parseInt(n, 10) || 0);
+  return plugin.skills
+    .map(s => s.version)
+    .sort((a, b) => {
+      const [aa, ab, ac] = parse(a), [ba, bb, bc] = parse(b);
+      return ba - aa || bb - ab || bc - ac;
+    })[0] ?? '1.0.0';
+}
+
+program
+  .command('sync')
+  .description('Regenerate the native Claude Code manifests (marketplace.json + plugin.json) from catalog.json')
+  .action(() => {
+    const catalog = loadCatalog();
+
+    // .claude-plugin/marketplace.json
+    const marketplace = {
+      $schema: 'https://anthropic.com/claude-code/marketplace.schema.json',
+      name: 'origammi-agents',
+      description:
+        'Private marketplace of generic, senior-grade AI agents for Origammi projects. Works with Claude Code, Cursor, Codex, and Gemini.',
+      owner: MP_OWNER,
+      plugins: catalog.plugins.map(p => ({
+        name: p.name,
+        description: p.description,
+        source: `./plugins/${p.name}`,
+        category: p.category ?? 'development',
+        tags: p.tags ?? [],
+      })),
+    };
+    const mpDir = join(REPO_ROOT, '.claude-plugin');
+    mkdirSync(mpDir, { recursive: true });
+    writeFileSync(join(mpDir, 'marketplace.json'), JSON.stringify(marketplace, null, 2) + '\n');
+    console.log('  ✓ .claude-plugin/marketplace.json');
+
+    // plugins/<name>/.claude-plugin/plugin.json
+    for (const p of catalog.plugins) {
+      const pluginManifest = {
+        name: p.name,
+        version: maxSkillVersion(p),
+        description: p.description,
+        author: MP_OWNER,
+      };
+      const dir = join(REPO_ROOT, 'plugins', p.name, '.claude-plugin');
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, 'plugin.json'), JSON.stringify(pluginManifest, null, 2) + '\n');
+      console.log(`  ✓ plugins/${p.name}/.claude-plugin/plugin.json @ ${pluginManifest.version}`);
+    }
+
+    console.log('\nManifests regenerated from catalog.json.');
   });
 
 program.parse();

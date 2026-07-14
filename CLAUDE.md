@@ -36,6 +36,32 @@ agents export --all --platform gemini --output ~/.gemini
 
 ---
 
+## Repository structure & sources of truth
+
+The repo serves two consumers from **one source of truth, `skills/catalog.json`**:
+
+1. The custom **`agents` CLI** (install/export/versioning, multi-platform). Reads `catalog.json` directly.
+2. The **native Claude Code plugin marketplace** (`/plugin marketplace add origammi-digital/agents-marketplace`). Reads `.claude-plugin/marketplace.json` + each `plugins/<plugin>/.claude-plugin/plugin.json`.
+
+Layout:
+
+```
+skills/catalog.json                          # SOURCE OF TRUTH (plugins, skills, versions, deps)
+.claude-plugin/marketplace.json              # GENERATED — native marketplace manifest
+plugins/<plugin>/.claude-plugin/plugin.json  # GENERATED — native per-plugin manifest
+plugins/<plugin>/agents/<name>.md            # the skill/agent files
+```
+
+**Never hand-edit the generated manifests.** After any change to `catalog.json` (add/edit a skill, bump a version, change a description, add a plugin), regenerate them:
+
+```bash
+agents sync    # rewrites marketplace.json + every plugin.json from catalog.json
+```
+
+The generated `plugin.json` version for a plugin is the highest skill version it contains.
+
+---
+
 ## Onboarding flow
 
 When the user doesn't specify what they want, follow this flow:
@@ -115,15 +141,16 @@ Each skill has a `version` field in `catalog.json`. When a skill file is changed
 If the user wants to create a new agent:
 
 1. Ask: what role, what plugin category, what should the agent do?
-2. Create `plugins/<plugin>/<name>.md` with this frontmatter:
+2. Create `plugins/<plugin>/agents/<name>.md` with this frontmatter:
    ```
    ---
    name: <install-as-name>
    description: One-line description used in listings and Cursor rule panels.
    ---
    ```
-3. Add to `skills/catalog.json` under the correct plugin.
-4. Commit and push.
+3. Add to `skills/catalog.json` under the correct plugin (set `file` to `plugins/<plugin>/agents/<name>.md`).
+4. Run `agents sync` to regenerate the native manifests.
+5. Commit and push.
 
 The agent content should be written as a role prompt — what the agent IS, what it does, what it won't do. Context about the specific project goes in the project's own CLAUDE.md/AGENTS.md, not here.
 
@@ -132,9 +159,10 @@ Agents in this marketplace are **generic** — no product-specific context, no h
 ### Updating an existing agent
 
 When editing an existing skill file:
-1. Make the changes to `plugins/<plugin>/<name>.md`
+1. Make the changes to `plugins/<plugin>/agents/<name>.md`
 2. **Bump the `version` in `skills/catalog.json`** for that skill — otherwise users won't know an update is available
 3. Use semver: patch (`1.0.0 → 1.0.1`) for fixes/additions, minor (`1.0.0 → 1.1.0`) for new sections, major (`1.0.0 → 2.0.0`) for rewrites
-4. Commit and push
+4. Run `agents sync` to propagate version/description changes to the native manifests
+5. Commit and push
 
 If the version is not bumped, `agents list` will continue to show `✓` for users who already have the old version installed — they won't know to update.

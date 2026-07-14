@@ -4,13 +4,15 @@
     {
       "name": "dev-team",
       "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Stack-agnostic, senior-grade.",
+      "category": "development",
+      "tags": ["development", "backend", "frontend", "design", "testing"],
       "skills": [
         {
           "skill": "designer",
           "installAs": "designer",
           "version": "2.0.0",
           "description": "Senior product designer — context-first, reads design system before proposing, implements in project stack, knows when to push back on scope.",
-          "file": "plugins/dev-team/designer.md",
+          "file": "plugins/dev-team/agents/designer.md",
           "tags": ["design", "ux", "frontend"]
         },
         {
@@ -18,7 +20,7 @@
           "installAs": "dev-team-backend",
           "version": "2.0.0",
           "description": "Senior backend engineer — stack-agnostic, layered architecture, TDD-first, idempotency-aware, observability-first.",
-          "file": "plugins/dev-team/backend.md",
+          "file": "plugins/dev-team/agents/backend.md",
           "tags": ["backend", "api", "database"],
           "dependencies": ["api-standards", "ref-performance-patterns"]
         },
@@ -27,7 +29,7 @@
           "installAs": "dev-team-frontend",
           "version": "2.0.0",
           "description": "Senior frontend engineer — stack-agnostic, React + TypeScript primary, accessibility-first, security-aware, error boundaries.",
-          "file": "plugins/dev-team/frontend.md",
+          "file": "plugins/dev-team/agents/frontend.md",
           "tags": ["frontend", "react", "typescript"]
         },
         {
@@ -35,7 +37,7 @@
           "installAs": "dev-team-tester",
           "version": "2.0.0",
           "description": "QA engineer / TDD lead — test case definition, coverage review, mutation testing, contract testing, performance testing.",
-          "file": "plugins/dev-team/tester.md",
+          "file": "plugins/dev-team/agents/tester.md",
           "tags": ["testing", "tdd", "qa"],
           "dependencies": ["ref-testing-frameworks"]
         }
@@ -44,13 +46,15 @@
     {
       "name": "product",
       "description": "Product and squad management: PM for discovery/prioritization, manager for orchestrating the full team.",
+      "category": "product",
+      "tags": ["product", "discovery", "management"],
       "skills": [
         {
           "skill": "pm",
           "installAs": "pm",
           "version": "2.0.0",
           "description": "Senior product manager — JTBD discovery framework, Given/When/Then acceptance criteria, scope protection, friction analysis.",
-          "file": "plugins/product/pm.md",
+          "file": "plugins/product/agents/pm.md",
           "tags": ["product", "discovery", "prioritization"]
         },
         {
@@ -58,7 +62,7 @@
           "installAs": "manager",
           "version": "1.0.0",
           "description": "Squad orchestrator — routes requests, enforces quality gates, never implements code.",
-          "file": "plugins/product/manager.md",
+          "file": "plugins/product/agents/manager.md",
           "tags": ["manager", "orchestrator"]
         }
       ]
@@ -66,13 +70,15 @@
     {
       "name": "security",
       "description": "Security review team: offensive (red-team) and defensive (blue-team) gates. Includes prompt injection coverage.",
+      "category": "security",
+      "tags": ["security", "red-team", "blue-team", "review"],
       "skills": [
         {
           "skill": "red-team",
           "installAs": "red-team",
           "version": "2.1.0",
           "description": "Adversary simulation, kill chain analysis, exploitation path modeling, prompt injection threat modeling. Stack- and domain-agnostic. Gate before every merge.",
-          "file": "plugins/security/red-team.md",
+          "file": "plugins/security/agents/red-team.md",
           "tags": ["security", "offensive", "review"]
         },
         {
@@ -80,7 +86,7 @@
           "installAs": "blue-team",
           "version": "2.1.0",
           "description": "Detection engineering, audit trail completeness, IR readiness, hardening, LLM injection monitoring. Stack- and domain-agnostic. Gate before every merge.",
-          "file": "plugins/security/blue-team.md",
+          "file": "plugins/security/agents/blue-team.md",
           "tags": ["security", "defensive", "review"]
         }
       ]
@@ -88,13 +94,15 @@
     {
       "name": "engineering",
       "description": "Cross-cutting engineering: architect, DevOps, observability, API standards, and git/CI standards.",
+      "category": "development",
+      "tags": ["architecture", "devops", "observability", "api", "standards"],
       "skills": [
         {
           "skill": "architect",
           "installAs": "architect",
           "version": "2.0.0",
           "description": "Software architect — code quality, design decisions, performance, scalability, distributed systems review.",
-          "file": "plugins/engineering/architect.md",
+          "file": "plugins/engineering/agents/architect.md",
           "tags": ["architecture", "review"],
           "dependencies": ["ref-performance-patterns"]
         },
@@ -103,7 +111,7 @@
           "installAs": "devops",
           "version": "2.0.0",
           "description": "DevOps/Platform engineer — container-first, GitOps-native, CI/CD optimization, cost analysis, infra incident response.",
-          "file": "plugins/engineering/devops.md",
+          "file": "plugins/engineering/agents/devops.md",
           "tags": ["infra", "devops", "ci"]
         },
         {
@@ -111,7 +119,7 @@
           "installAs": "observability",
           "version": "1.0.0",
           "description": "Observability engineer — SLOs, error budgets, Four Golden Signals, structured logging, alerting strategy, OpenTelemetry.",
-          "file": "plugins/engineering/observability.md",
+          "file": "plugins/engineering/agents/observability.md",
           "tags": ["observability", "monitoring", "slo"]
         },
         {
@@ -119,7 +127,7 @@
           "installAs": "api-standards",
           "version": "1.0.0",
           "description": "API design standards — REST conventions, versioning, pagination, idempotency, error response format.",
-          "file": "plugins/engineering/api-standards.md",
+          "file": "plugins/engineering/agents/api-standards.md",
           "tags": ["api", "rest", "standards"]
         },
         {
@@ -127,7 +135,7 @@
           "installAs": "commit-and-pr-standards",
           "version": "2.0.0",
           "description": "Git discipline — Conventional Commits format, small focused commits, branch from main, CI hygiene.",
-          "file": "plugins/engineering/commit-and-pr-standards.md",
+          "file": "plugins/engineering/agents/commit-and-pr-standards.md",
           "tags": ["git", "ci"]
         }
       ]
@@ -135,13 +143,15 @@
     {
       "name": "llm-eval",
       "description": "LLM evaluation and testing: behavioral assertions, regression tracking, and safety testing for AI agents and skills using DeepEval.",
+      "category": "testing",
+      "tags": ["llm", "eval", "testing", "ai"],
       "skills": [
         {
           "skill": "llm-eval",
           "installAs": "llm-eval",
           "version": "1.0.0",
           "description": "LLM evaluation engineer using DeepEval — correctness, groundedness, hallucination detection, prompt injection defense, agent regression suites.",
-          "file": "plugins/llm-eval/deepeval.md",
+          "file": "plugins/llm-eval/agents/deepeval.md",
           "tags": ["llm", "eval", "testing", "ai"]
         }
       ]
@@ -149,6 +159,8 @@
     {
       "name": "references",
       "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed. Install to make them available as context.",
+      "category": "development",
+      "tags": ["reference", "patterns", "performance", "testing"],
       "skills": [
         {
           "skill": "ref-testing-frameworks",
@@ -156,7 +168,7 @@
           "version": "1.0.0",
           "isReference": true,
           "description": "Reference companion: PHPUnit, Vitest, React Testing Library, Playwright, Go testify, and pytest code patterns.",
-          "file": "plugins/references/testing-frameworks.md",
+          "file": "plugins/references/agents/testing-frameworks.md",
           "tags": ["testing", "reference"]
         },
         {
@@ -165,7 +177,7 @@
           "version": "1.0.0",
           "isReference": true,
           "description": "Reference companion: N+1, unbounded queries, sequential vs parallel async, partial failure consistency, TOCTOU patterns.",
-          "file": "plugins/references/performance-patterns.md",
+          "file": "plugins/references/agents/performance-patterns.md",
           "tags": ["performance", "reference"]
         }
       ]
