@@ -12,42 +12,73 @@
       "description": "Core development team: designer, backend engineer, frontend engineer, and QA/tester. Stack-agnostic, senior-grade.",
       "source": "./plugins/dev-team",
       "category": "development",
-      "tags": ["development", "backend", "frontend", "design", "testing"]
+      "tags": [
+        "development",
+        "backend",
+        "frontend",
+        "design",
+        "testing"
+      ]
     },
     {
       "name": "product",
       "description": "Product and squad management: PM for discovery/prioritization, manager for orchestrating the full team.",
       "source": "./plugins/product",
       "category": "product",
-      "tags": ["product", "discovery", "management"]
+      "tags": [
+        "product",
+        "discovery",
+        "management"
+      ]
     },
     {
       "name": "security",
       "description": "Security review team: offensive (red-team) and defensive (blue-team) gates. Includes prompt injection coverage.",
       "source": "./plugins/security",
       "category": "security",
-      "tags": ["security", "red-team", "blue-team", "review"]
+      "tags": [
+        "security",
+        "red-team",
+        "blue-team",
+        "review"
+      ]
     },
     {
       "name": "engineering",
       "description": "Cross-cutting engineering: architect, DevOps, observability, API standards, and git/CI standards.",
       "source": "./plugins/engineering",
       "category": "development",
-      "tags": ["architecture", "devops", "observability", "api", "standards"]
+      "tags": [
+        "architecture",
+        "devops",
+        "observability",
+        "api",
+        "standards"
+      ]
     },
     {
       "name": "llm-eval",
-      "description": "LLM evaluation and testing: behavioral assertions, regression tracking, and safety testing for AI agents using DeepEval.",
+      "description": "LLM evaluation and testing: behavioral assertions, regression tracking, and safety testing for AI agents and skills using DeepEval.",
       "source": "./plugins/llm-eval",
       "category": "testing",
-      "tags": ["llm", "eval", "testing", "ai"]
+      "tags": [
+        "llm",
+        "eval",
+        "testing",
+        "ai"
+      ]
     },
     {
       "name": "references",
-      "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed.",
+      "description": "On-demand reference skills: detailed code patterns invoked by other agents when needed. Install to make them available as context.",
       "source": "./plugins/references",
       "category": "development",
-      "tags": ["reference", "patterns", "performance", "testing"]
+      "tags": [
+        "reference",
+        "patterns",
+        "performance",
+        "testing"
+      ]
     }
   ]
 }
