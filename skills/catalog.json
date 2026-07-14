@@ -210,6 +210,14 @@
           "description": "How to author, edit, and test a marketplace skill — role vs process shapes, description-as-trigger, rationalization tables, positive-recipe wording, multi-platform action language, and testing skills with llm-eval.",
           "file": "plugins/meta/agents/writing-skills.md",
           "tags": ["meta", "authoring", "skills"]
+        },
+        {
+          "skill": "using-marketplace-skills",
+          "installAs": "using-marketplace-skills",
+          "version": "1.0.0",
+          "description": "Bootstrap skill: how to discover and sequence the marketplace skills at the start of a task — process-before-role priority, description-as-trigger discovery, announce-and-checklist. Injected into every session by the `agents install-hook` SessionStart hook.",
+          "file": "plugins/meta/agents/using-marketplace-skills.md",
+          "tags": ["meta", "activation", "bootstrap"]
         }
       ]
     },

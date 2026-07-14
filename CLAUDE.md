@@ -62,6 +62,22 @@ The generated `plugin.json` version for a plugin is the highest skill version it
 
 ---
 
+## Activation (making skills actually get used)
+
+Installed skills are passive — nothing forces the model to reach for them. The `meta` plugin's `using-marketplace-skills` bootstrap skill teaches discovery and the process-before-role priority; a **SessionStart hook** injects it into every session so the check happens before the model acts.
+
+Opt-in and reversible — nothing changes until the user runs it:
+
+```bash
+agents install-hook            # add the SessionStart hook to ~/.claude/settings.json
+agents install-hook --project  # or to ./.claude/settings.json (project-scoped)
+agents uninstall-hook          # remove it (leaves any other hooks intact)
+```
+
+The hook calls `agents session-context`, which prints the bootstrap skill as `additionalContext`. Install/uninstall are idempotent and preserve unrelated settings. After installing, restart Claude Code (or run `/hooks`) to activate.
+
+---
+
 ## Onboarding flow
 
 When the user doesn't specify what they want, follow this flow:

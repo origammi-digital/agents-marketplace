@@ -545,4 +545,109 @@ program
     console.log('\nManifests regenerated from catalog.json.');
   });
 
+// ── Activation: SessionStart hook ───────────────────────────────────────────
+// Injects the bootstrap skill into every session so the model reaches for the
+// marketplace skills before acting, instead of leaving it to chance.
+
+const BOOTSTRAP_SKILL = 'using-marketplace-skills';
+const HOOK_MARKER = 'agents-marketplace:session-context'; // identifies our hook entry
+const HOOK_COMMAND = `node ${JSON.stringify(join(REPO_ROOT, 'dist', 'index.js'))} session-context`;
+
+function settingsPath(project: boolean): string {
+  return project
+    ? join(process.cwd(), '.claude', 'settings.json')
+    : join(homedir(), '.claude', 'settings.json');
+}
+
+function readSettings(path: string): Record<string, unknown> {
+  if (!existsSync(path)) return {};
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    console.error(`  ✗ ${path} is not valid JSON — fix it before installing the hook.`);
+    process.exit(1);
+  }
+}
+
+// SESSION-CONTEXT — print the SessionStart payload the hook feeds to the model
+program
+  .command('session-context')
+  .description('Print the SessionStart hook payload (the bootstrap skill as additionalContext). Called by the installed hook.')
+  .action(() => {
+    const catalog = loadCatalog();
+    const found = findSkillByInstallAs(catalog, BOOTSTRAP_SKILL);
+    if (!found) {
+      console.error(`Bootstrap skill "${BOOTSTRAP_SKILL}" not found in catalog.`);
+      process.exit(1);
+    }
+    const body = stripFrontmatter(readSkillContent(found.entry));
+    const context = `<!-- ${HOOK_MARKER} -->\n<marketplace-skills-reminder>\nYou have Origammi marketplace skills installed. Before acting on a task, apply the following:\n\n${body}\n</marketplace-skills-reminder>`;
+    process.stdout.write(
+      JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'SessionStart',
+          additionalContext: context,
+        },
+      }),
+    );
+  });
+
+// INSTALL-HOOK — register the SessionStart hook in settings.json
+program
+  .command('install-hook')
+  .description('Install a SessionStart hook that injects the bootstrap skill into every session')
+  .option('-p, --project', 'write to ./.claude/settings.json instead of ~/.claude/settings.json')
+  .action((opts) => {
+    const path = settingsPath(opts.project ?? false);
+    const settings = readSettings(path);
+    const hooks = (settings.hooks ??= {}) as Record<string, unknown>;
+    const sessionStart = (hooks.SessionStart ??= []) as Array<Record<string, unknown>>;
+
+    const already = sessionStart.some(entry =>
+      (entry.hooks as Array<{ command?: string }> | undefined)?.some(h =>
+        h.command?.includes('session-context'),
+      ),
+    );
+    if (already) {
+      console.log('  — SessionStart hook already installed.');
+      return;
+    }
+
+    sessionStart.push({
+      matcher: 'startup|resume|clear',
+      hooks: [{ type: 'command', command: HOOK_COMMAND }],
+    });
+
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, JSON.stringify(settings, null, 2) + '\n');
+    console.log(`  ✓ SessionStart hook installed in ${path}`);
+    console.log('    Restart Claude Code (or run /hooks) to activate it.');
+  });
+
+// UNINSTALL-HOOK — remove the SessionStart hook from settings.json
+program
+  .command('uninstall-hook')
+  .description('Remove the marketplace SessionStart hook from settings.json')
+  .option('-p, --project', 'operate on ./.claude/settings.json instead of ~/.claude/settings.json')
+  .action((opts) => {
+    const path = settingsPath(opts.project ?? false);
+    if (!existsSync(path)) { console.log('  — no settings file; nothing to remove.'); return; }
+    const settings = readSettings(path);
+    const hooks = settings.hooks as Record<string, unknown> | undefined;
+    const sessionStart = hooks?.SessionStart as Array<Record<string, unknown>> | undefined;
+    if (!sessionStart) { console.log('  — no SessionStart hook found.'); return; }
+
+    const kept = sessionStart.filter(entry =>
+      !(entry.hooks as Array<{ command?: string }> | undefined)?.some(h =>
+        h.command?.includes('session-context'),
+      ),
+    );
+    if (kept.length === sessionStart.length) { console.log('  — marketplace hook not found.'); return; }
+
+    if (kept.length > 0) hooks!.SessionStart = kept;
+    else delete hooks!.SessionStart;
+    writeFileSync(path, JSON.stringify(settings, null, 2) + '\n');
+    console.log(`  ✓ SessionStart hook removed from ${path}`);
+  });
+
 program.parse();
