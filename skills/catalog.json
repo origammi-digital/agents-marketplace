@@ -1,5 +1,5 @@
 {
-  "version": "5",
+  "version": "6",
   "plugins": [
     {
       "name": "dev-team",
@@ -70,16 +70,16 @@
         {
           "skill": "red-team",
           "installAs": "red-team",
-          "version": "2.0.0",
-          "description": "Adversary simulation, kill chain analysis, exploitation path modeling, prompt injection threat modeling. Gate before every merge.",
+          "version": "2.1.0",
+          "description": "Adversary simulation, kill chain analysis, exploitation path modeling, prompt injection threat modeling. Stack- and domain-agnostic. Gate before every merge.",
           "file": "plugins/security/red-team.md",
           "tags": ["security", "offensive", "review"]
         },
         {
           "skill": "blue-team",
           "installAs": "blue-team",
-          "version": "2.0.0",
-          "description": "Detection engineering, audit trail completeness, IR readiness, hardening, LLM injection monitoring. Gate before every merge.",
+          "version": "2.1.0",
+          "description": "Detection engineering, audit trail completeness, IR readiness, hardening, LLM injection monitoring. Stack- and domain-agnostic. Gate before every merge.",
           "file": "plugins/security/blue-team.md",
           "tags": ["security", "defensive", "review"]
         }
