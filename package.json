@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "node evals/skill-hygiene.mjs"
   },
   "dependencies": {
     "commander": "^12.0.0"
