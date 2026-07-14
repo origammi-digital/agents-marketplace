@@ -1,0 +1,9 @@
+{
+  "name": "process",
+  "version": "1.0.0",
+  "description": "Engineering process discipline: how the work is conducted, not who does it. Debugging, TDD, planning, and verification — the workflow skills that resist being skipped under pressure.",
+  "author": {
+    "name": "Origammi Digital",
+    "url": "https://github.com/origammi-digital"
+  }
+}

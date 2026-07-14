@@ -157,6 +157,47 @@
       ]
     },
     {
+      "name": "process",
+      "description": "Engineering process discipline: how the work is conducted, not who does it. Debugging, TDD, planning, and verification — the workflow skills that resist being skipped under pressure.",
+      "category": "development",
+      "tags": ["process", "workflow", "discipline", "tdd", "debugging"],
+      "skills": [
+        {
+          "skill": "systematic-debugging",
+          "installAs": "systematic-debugging",
+          "version": "1.0.0",
+          "description": "Reproduce → isolate → root cause → fix → verify. Use before proposing any fix, especially after a fix already failed or when tempted to guess. Kills symptom-patching.",
+          "file": "plugins/process/agents/systematic-debugging.md",
+          "tags": ["debugging", "process", "root-cause"]
+        },
+        {
+          "skill": "test-driven-development",
+          "installAs": "test-driven-development",
+          "version": "1.0.0",
+          "description": "Red-green-refactor: the failing test comes before the code, for features and bugfixes alike. Use before writing implementation code.",
+          "file": "plugins/process/agents/test-driven-development.md",
+          "tags": ["tdd", "testing", "process"],
+          "dependencies": ["ref-testing-frameworks"]
+        },
+        {
+          "skill": "planning-before-building",
+          "installAs": "planning-before-building",
+          "version": "1.0.0",
+          "description": "Turn a fuzzy, multi-step request into a decomposed, reviewable plan of bite-sized steps before coding. Use for anything spanning more than one file or carrying unknowns.",
+          "file": "plugins/process/agents/planning-before-building.md",
+          "tags": ["planning", "decomposition", "process"]
+        },
+        {
+          "skill": "verification-before-completion",
+          "installAs": "verification-before-completion",
+          "version": "1.0.0",
+          "description": "Require fresh, just-observed evidence before claiming done/fixed/passing. Use before committing, opening a PR, or telling the user it works.",
+          "file": "plugins/process/agents/verification-before-completion.md",
+          "tags": ["verification", "quality", "process"]
+        }
+      ]
+    },
+    {
       "name": "meta",
       "description": "Meta skills for maintaining the marketplace itself: how to author, edit, and test skills so they actually get used.",
       "category": "development",

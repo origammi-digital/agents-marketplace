@@ -69,6 +69,19 @@
       ]
     },
     {
+      "name": "process",
+      "description": "Engineering process discipline: how the work is conducted, not who does it. Debugging, TDD, planning, and verification — the workflow skills that resist being skipped under pressure.",
+      "source": "./plugins/process",
+      "category": "development",
+      "tags": [
+        "process",
+        "workflow",
+        "discipline",
+        "tdd",
+        "debugging"
+      ]
+    },
+    {
       "name": "meta",
       "description": "Meta skills for maintaining the marketplace itself: how to author, edit, and test skills so they actually get used.",
       "source": "./plugins/meta",
